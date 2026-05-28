@@ -62,34 +62,81 @@ ggiSTAY_analysis(output = output_individual_populations_div, x_variable = "log2_
 
 ## Multiple time series analysis
 # Analyze the stability and synchrony within each metacommunity
-# and their relationships with diversity based on 20 metacommunities
-# See Example 6 in the iSTAY vignette for the output.
+# using equal weights
 metacommunities <- Data_Jena_20_metacommunities
-output_metacommunities_div <- iSTAY_Multiple(data = metacommunities, 
-                                     order.q = c(1,2), Alltime = TRUE)
-output_metacommunities_div <- data.frame(output_metacommunities_div, 
-                                    log2_sowndiv = log2(as.numeric(do.call(rbind, 
-                                    strsplit(output_metacommunities_div[, 1], "_"))[, 2])),
-                                    block = do.call(rbind, 
-                                    strsplit(output_metacommunities_div[, 1], "_"))[, 1])
+output_metacommunities_equal_div <- iSTAY_Multiple(
+                                     data = metacommunities,
+                                     order.q = c(1, 2),
+                                     equal_weights = TRUE,
+                                     Alltime = TRUE)
+output_metacommunities_equal_div <- data.frame(
+                                     output_metacommunities_equal_div,
+                                     log2_sowndiv = log2(as.numeric(do.call(rbind,
+                                     strsplit(output_metacommunities_equal_div[, 1], "_"))[, 2])),
+                                     block = do.call(rbind,
+                                     strsplit(output_metacommunities_equal_div[, 1], "_"))[, 1])
 
-ggiSTAY_analysis(output = output_metacommunities_div, x_variable = "log2_sowndiv",
-                    by_group = "block", model = "LMM")
+ggiSTAY_analysis(output = output_metacommunities_equal_div,
+                 x_variable = "log2_sowndiv",
+                 by_group = "block",
+                 model = "LMM")
+
+# Analyze the stability and synchrony within each metacommunity
+# using size/biomass weights
+output_metacommunities_biomass_div <- iSTAY_Multiple(
+                                       data = metacommunities,
+                                       order.q = c(1, 2),
+                                       equal_weights = FALSE,
+                                       Alltime = TRUE)
+output_metacommunities_biomass_div <- data.frame(
+                                       output_metacommunities_biomass_div,
+                                       log2_sowndiv = log2(as.numeric(do.call(rbind,
+                                       strsplit(output_metacommunities_biomass_div[, 1], "_"))[, 2])),
+                                       block = do.call(rbind,
+                                       strsplit(output_metacommunities_biomass_div[, 1], "_"))[, 1])
+
+ggiSTAY_analysis(output = output_metacommunities_biomass_div,
+                 x_variable = "log2_sowndiv",
+                 by_group = "block",
+                 model = "LMM")
 
 # Analyze the stability and synchrony within each metapopulation
-# and their relationships with diversity based on 76 metapopulations
-# See Example 8 in the iSTAY vignette for the output.
-
+# using equal weights
 metapopulations <- Data_Jena_76_metapopulations
-output_metapopulations_div <- iSTAY_Multiple(data = metapopulations,
-                                              order.q=c(1,2), Alltime=TRUE)
-output_metapopulations_div <- data.frame(output_metapopulations_div,
-                             log2_sowndiv = log2(as.numeric(do.call(rbind,
-                             strsplit(output_metapopulations_div[,1],"[._]+"))[,3])),
-                             block = do.call(rbind, 
-                             strsplit(output_metapopulations_div[,1],"_"))[,2])
+output_metapopulations_equal_div <- iSTAY_Multiple(
+                                     data = metapopulations,
+                                     order.q = c(1, 2),
+                                     equal_weights = TRUE,
+                                     Alltime = TRUE)
+output_metapopulations_equal_div <- data.frame(
+                                     output_metapopulations_equal_div,
+                                     log2_sowndiv = log2(as.numeric(do.call(rbind,
+                                     strsplit(output_metapopulations_equal_div[, 1], "[._]+"))[, 3])),
+                                     block = do.call(rbind,
+                                     strsplit(output_metapopulations_equal_div[, 1], "_"))[, 2])
 
-ggiSTAY_analysis(output = output_metapopulations_div, x_variable = "log2_sowndiv",
-                    by_group = "block", model = "LMM")
+ggiSTAY_analysis(output = output_metapopulations_equal_div,
+                 x_variable = "log2_sowndiv",
+                 by_group = "block",
+                 model = "LMM")
+
+# Analyze the stability and synchrony within each metapopulation
+# using size/biomass weights
+output_metapopulations_biomass_div <- iSTAY_Multiple(
+                                       data = metapopulations,
+                                       order.q = c(1, 2),
+                                       equal_weights = FALSE,
+                                       Alltime = TRUE)
+output_metapopulations_biomass_div <- data.frame(
+                                       output_metapopulations_biomass_div,
+                                       log2_sowndiv = log2(as.numeric(do.call(rbind,
+                                       strsplit(output_metapopulations_biomass_div[, 1], "[._]+"))[, 3])),
+                                       block = do.call(rbind,
+                                       strsplit(output_metapopulations_biomass_div[, 1], "_"))[, 2])
+
+ggiSTAY_analysis(output = output_metapopulations_biomass_div,
+                 x_variable = "log2_sowndiv",
+                 by_group = "block",
+                 model = "LMM")
 
 }

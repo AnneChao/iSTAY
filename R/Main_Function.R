@@ -100,6 +100,9 @@ iSTAY_Single <- function (data, order.q = c(1, 2), Alltime = TRUE, start_T = NUL
 #'
 #' @param data A \code{data.frame} containing multiple time series data, with sampling units as rows and time points as columns, or a \code{list} of \code{data.frames} with each data frame representing multiple time series.
 #' @param order.q A numerical vector specifying the orders of stability and synchrony. Default is c(1,2).
+#' @param equal_weights Logical. If \code{TRUE}, all time series are assigned equal weights when computing alpha and gamma stability.
+#' If \code{FALSE}, time series are weighted by their total abundance or biomass across all time points.
+#' Default is \code{TRUE}.
 #' @param Alltime Logical (\code{TRUE} or \code{FALSE}), indicating whether to use all time points in the data.
 #' @param start_T (Applicable only if \code{Alltime = FALSE}) a positive integer specifying the starting column (time point) for the analysis interval.
 #' @param end_T (Applicable only if \code{Alltime = FALSE}) a positive integer specifying the ending column (time point) for the analysis interval.
@@ -112,22 +115,41 @@ iSTAY_Single <- function (data, order.q = c(1, 2), Alltime = TRUE, start_T = NUL
 #'  Synchrony: synchrony measure of order q
 #'
 #' @examples
-#' # Stability of multiple time series
+#' # Stability and synchrony of metacommunities using equal weights
 #' data("Data_Jena_20_metacommunities")
 #' metacommunities <- Data_Jena_20_metacommunities
-#' output_metacommunities <- iSTAY_Multiple(data = metacommunities, order.q = c(1,2), Alltime = TRUE)
-#' output_metacommunities
+#' output_metacommunities_equal <- iSTAY_Multiple(data = metacommunities,
+#'                                               order.q = c(1, 2),
+#'                                               equal_weights = TRUE,
+#'                                               Alltime = TRUE)
+#' output_metacommunities_equal
 #'
-#' # Stability of metapopulations
+#' # Stability and synchrony of metacommunities using size/biomass weights
+#' output_metacommunities_biomass <- iSTAY_Multiple(data = metacommunities,
+#'                                                 order.q = c(1, 2),
+#'                                                 equal_weights = FALSE,
+#'                                                 Alltime = TRUE)
+#' output_metacommunities_biomass
+#'
+#' # Stability and synchrony of metapopulations using equal weights
 #' data("Data_Jena_76_metapopulations")
 #' metapopulations <- Data_Jena_76_metapopulations
-#' output_metapopulations <- iSTAY_Multiple(data = metapopulations, order.q = c(1,2), Alltime = TRUE)
-#' output_metapopulations
+#' output_metapopulations_equal <- iSTAY_Multiple(data = metapopulations,
+#'                                               order.q = c(1, 2),
+#'                                               equal_weights = TRUE,
+#'                                               Alltime = TRUE)
+#' output_metapopulations_equal
 #'
-#'
+#' # Stability and synchrony of metapopulations using size/biomass weights
+#' output_metapopulations_biomass <- iSTAY_Multiple(data = metapopulations,
+#'                                                 order.q = c(1, 2),
+#'                                                 equal_weights = FALSE,
+#'                                                 Alltime = TRUE)
+#' output_metapopulations_biomass
 #' @export
 
-iSTAY_Multiple <- function (data, order.q = c(1, 2), Alltime = TRUE, start_T = NULL, end_T = NULL){
+iSTAY_Multiple = function (data, order.q = c(1, 2), equal_weights = TRUE, Alltime = TRUE, start_T = NULL, end_T = NULL) 
+{
   NA_num <- sum(is.na(data))
   if (NA_num != 0) {
     stop("There are some NA in the data.")
@@ -144,102 +166,136 @@ iSTAY_Multiple <- function (data, order.q = c(1, 2), Alltime = TRUE, start_T = N
       stop("Starting and ending time need to be a number, and ending time needs larger than starting time.")
     }
   }
-  Stabillity_Multiple <- function(ZZ, q) {
-    K <- ncol(ZZ)
+  
+  Stabillity_Multiple <- function(ZZ, q){
+    
     z_iplus <- apply(ZZ, 1, sum)
+    
     if (length(which(z_iplus == 0)) != 0) {
       ZZ <- ZZ[-which(z_iplus == 0), ]
     }
+    
     ZZ <- as.matrix(ZZ)
     z_iplus <- apply(ZZ, 1, sum)
-    z_plusk <- apply(ZZ, 2, sum)
-    z_plusplus <- sum(ZZ)
+    Times <- ncol(ZZ); K <- nrow(ZZ)
+    
     p_i <- as.data.frame(apply(ZZ, 2, function(w) w / z_iplus))
-    p_pool <- z_plusk / z_plusplus
-    ww <- z_iplus / z_plusplus
-    if (q == 1) {
-      p_i_new <- p_i
-      p_pool_new <- p_pool
-      alpha <- (exp(-sum(ZZ[ZZ > 0] / z_plusplus * log(p_i_new[p_i_new > 0]))) - 1) / (K - 1)
-      gamma <- (exp(-sum(p_pool[p_pool > 0] * log(p_pool_new[p_pool_new > 0]))) - 1) / (K - 1)
-    } else {
-      alpha <- (sum(z_iplus / z_plusplus * (ZZ / z_iplus)^q)^(1 / (1-q)) - 1) / (K - 1)
-      gamma <- (sum(p_pool^q)^(1 / (1 - q)) - 1) / (K - 1)
+    
+    if(dim(p_i)[2] == 1) p_i = t(p_i)
+    
+    if(equal_weights){
+      
+      ww <- rep(1/K,K)
+      p_pool <- ww %*% as.matrix(p_i)
+      
+    }else{
+      
+      z_plusk <- apply(ZZ, 2, sum)
+      ww <- z_iplus/sum(ZZ)
+      p_pool <- ww %*% as.matrix(p_i)
+      
     }
-    return(c(gamma, alpha, (gamma / alpha), (gamma - alpha)))
+    
+    if(q == 1){
+      alpha <- (exp(sum(ww * apply(p_i, 1, function(p) -sum(p[p > 0] * log(p[p > 0]))))) - 1)/(Times - 1)
+      gamma <- (exp(-sum(p_pool[p_pool > 0] * log(p_pool[p_pool > 0]))) - 1)/(Times - 1)
+    }else{
+      alpha <- (sum(ww * rowSums(p_i^q))^(1/(1-q)) - 1)/(Times - 1)
+      gamma <- (sum(p_pool^q)^(1/(1 - q)) - 1)/(Times - 1)
+    }
+    return( c(gamma, alpha, (gamma/alpha), (gamma - alpha)) )
   }
-  Synchrony <- function(ZZ, q) {
-    M <- nrow(ZZ)
-    K <- ncol(ZZ)
-    if (M == 1) {
-      value <- 1
+  
+  Synchrony <- function(ZZ, q){
+    
+    z_iplus <- apply(ZZ, 1, sum)
+    
+    if (length(which(z_iplus == 0)) != 0) {
+      ZZ <- ZZ[-which(z_iplus == 0), ]
     }
-    else {
-      z_iplus <- apply(ZZ, 1, sum)
-      if (length(which(z_iplus == 0)) != 0) {
-        ZZ <- ZZ[-which(z_iplus == 0), ]
-      }
-      ZZ <- as.matrix(ZZ)
-      z_iplus <- apply(ZZ, 1, sum)
-      if (length(z_iplus) <= 1) {
-        value <- NA
-      }
-      else {
-        z_plusk <- apply(ZZ, 2, sum)
-        z_plusplus <- sum(ZZ)
-        p_i <- apply(ZZ, 2, function(w) w / z_iplus)
-        ww <- z_iplus / z_plusplus
-        if (q == 1) {
-          J <- exp(-sum(ZZ[ZZ > 0] / z_plusplus * log(ZZ[ZZ > 0] / z_plusplus)))
-          J <- ifelse(J < K, J, J / M + K * (M - 1) / M)
-          pool <- z_plusk/z_plusplus
-          pool[which(pool == 0)] <- 10^(-15)
-          G <- exp(-sum(pool * log(pool)))
-          A <- exp(-sum(ZZ[ZZ > 0] / z_plusplus * log(p_i[p_i > 0])))
-          value <- (J - G)/(J - A)
+    
+    ZZ <- as.matrix(ZZ)
+    
+    Times <- ncol(ZZ); K <- nrow(ZZ)
+    z_iplus <- apply(ZZ, 1, sum)
+    
+    gamma_diversity = Stabillity_Multiple(ZZ,q)[1] * (Times - 1) + 1
+    alpha_diversity = Stabillity_Multiple(ZZ,q)[2] * (Times - 1) + 1
+    
+    
+    if(sum(rowSums(ZZ)>0)!=1){
+      
+      if(dim(ZZ)[1] > dim(ZZ)[2]){
+        
+        1 - (1 - alpha_diversity/gamma_diversity)/(1 - 1/gamma_diversity)
+        
+      }else{
+        
+        p_i <- as.data.frame(apply(ZZ, 2, function(w) w / z_iplus))
+        
+        if(equal_weights){
+          
+          ww <- rep(1/K, K)
+          p_joint <- diag(ww, K) %*% as.matrix(p_i)
+          
+        }else{
+          
+          ww <- z_iplus/sum(ZZ)
+          p_joint <- diag(ww, K) %*% as.matrix(p_i)
+          
         }
-        else {
-          J <- sum((ZZ/z_plusplus)^q)^(1/(1-q))
-          J <- ifelse(J < K, J, J / M + K * (M - 1) / M)
-          G <- sum((z_plusk / z_plusplus)^q) ^ (1 / (1-q))
-          A <- sum(apply(ZZ, 2, function(w) (w / z_iplus)^q * ww))^(1 / (1-q))
-          value <- (J - G) / (J - A)
+        
+        if(q == 1){
+          
+          joint_diversity <- exp(-sum(p_joint[p_joint > 0] * log(p_joint[p_joint > 0])) )
+          
+        }else{
+          
+          joint_diversity <- sum((p_joint)^q)^(1/(1 - q))
+          
         }
+        
+        1 - (1 - alpha_diversity/gamma_diversity)/(1 - alpha_diversity/joint_diversity)
+        
       }
-    }
-    return(value)
+      
+      
+    }else{
+      
+      1
+      
+    } 
+    
+    
   }
+  
   if (is.data.frame(data) | is.matrix(data)) {
     if (Alltime == TRUE) {
       subdata <- data
+    }else {
+      subdata <- data[, c(start_T:end_T)]
     }
-    else {
-      subdata <- data[, c(start_T : end_T)]
-    }
-    out <- as.matrix(sapply(order.q, function(qq) c(Stabillity_Multiple(subdata, q = qq), Synchrony(subdata, q = qq))))
-    result <- data.frame(Site = rep(1, length(order.q)),
+    out <- as.matrix(sapply(order.q, function(qq) c(Stabillity_Multiple(subdata, 
+                                                                        q = qq), Synchrony(subdata, q = qq))))
+    result <- data.frame(Site = rep(1, length(order.q)), 
                          Order_q = order.q, t(out))
     colnames(result)[3:7] <- c("Stab_Gamma", "Stab_Alpha", 
-                               "Stab_Beta_multiplicative", 
-                               "Stab_Beta_additive", 
+                               "Stab_Beta_multiplicative", "Stab_Beta_additive", 
                                "Synchrony")
     result <- result[, -5]
-  }
-  else {
+  }else {
     out <- lapply(order.q, function(qq) {
       cal <- lapply(data, function(ZZ) {
         if (Alltime == T) {
           subZZ <- ZZ
-        }
-        else {
+        }else {
           subZZ <- ZZ[, c(start_T:end_T)]
         }
         outout <- c(Stabillity_Multiple(subZZ, q = qq), 
                     Synchrony(subZZ, q = qq))
         result <- data.frame(Order_q = qq, t(outout))
         colnames(result)[2:6] <- c("Stab_Gamma", "Stab_Alpha", 
-                                   "Stab_Beta_multiplicative", 
-                                   "Stab_Beta_additive", 
+                                   "Stab_Beta_multiplicative", "Stab_Beta_additive", 
                                    "Synchrony")
         result <- result[, -4]
         return(result)
@@ -250,10 +306,13 @@ iSTAY_Multiple <- function (data, order.q = c(1, 2), Alltime = TRUE, start_T = N
     })
     result <- do.call(rbind, out)
   }
-  colnames(result) <- c("Dataset", "Order_q", "Gamma", "Alpha", "Beta", "Synchrony")
+  colnames(result) <- c("Dataset", "Order_q", "Gamma", "Alpha", 
+                        "Beta", "Synchrony")
+  
+  result$Weight <- ifelse(equal_weights, "Equal weight", "Biomass weight")
+  
   return(result)
 }
-
 #' Calculate stability and synchrony at each hierarchical level
 #'
 #' \code{iSTAY_Hier} computes gamma, alpha, and beta stability, as well as synchrony, at each hierarchical level for time series of biomass or other variables.
@@ -285,103 +344,158 @@ iSTAY_Multiple <- function (data, order.q = c(1, 2), Alltime = TRUE, start_T = N
 #'
 #' @export
 
-iSTAY_Hier <- function (data, structure, order.q = c(1, 2), Alltime = TRUE, start_T = NULL, end_T = NULL){
+iSTAY_Hier <- function(data, structure, order.q = c(1, 2),
+                       Alltime = TRUE, start_T = NULL, end_T = NULL) {
+  
   if (Alltime == FALSE) {
     data <- data[, start_T:end_T]
   }
-  TT <- ncol(data)
+  
+  Times <- ncol(data)
+  
   del <- which(apply(data, 1, sum) == 0)
   if (length(del) != 0) {
     data <- data[-del, ]
     structure <- structure[-del, ]
   }
+  
   data <- as.matrix(data)
   
   N <- sum(data)
   G <- apply(data, 2, sum) / N
   
-  S_gamma <- function(q){
-    if(q == 1){
-      (exp(-sum(G[G > 0] * log(G[G > 0]))) - 1) / (TT - 1)
-    }
-    else{
-      ((sum(G^q))^(1 / (1 - q)) - 1) / (TT - 1)
+  S_gamma <- function(q) {
+    if (q == 1) {
+      (exp(-sum(G[G > 0] * log(G[G > 0]))) - 1) / (Times - 1)
+    } else {
+      ((sum(G^q))^(1 / (1 - q)) - 1) / (Times - 1)
     }
   }
-  out_gamma <- sapply(order.q, S_gamma)
-  out <- data.frame(order_q = order.q, 
-                    gamma_value = out_gamma)
   
-  S_alpha <- function(q){
-    if(q == 1){
-      (exp(sum((apply(p, 2, function(x) -sum(x[x>0] * log(x[x>0])))) * w)) - 1) / (TT - 1)
-    }
-    else{
-      (sum((apply(p, 2, function(x) sum((x[x>0])^q))) * w)^(1 / (1 - q)) - 1) / (TT - 1)
+  out_gamma <- sapply(order.q, S_gamma)
+  
+  out <- data.frame(
+    order_q = order.q,
+    gamma_value = out_gamma
+  )
+  
+  S_alpha <- function(q) {
+    if (q == 1) {
+      (exp(sum((apply(p, 2, function(x) {
+        -sum(x[x > 0] * log(x[x > 0]))
+      })) * w)) - 1) / (Times - 1)
+    } else {
+      (sum((apply(p, 2, function(x) {
+        sum((x[x > 0])^q)
+      })) * w)^(1 / (1 - q)) - 1) / (Times - 1)
     }
   }
   
   nStruc <- ncol(structure) + 1
   
   for (h in 1:(ncol(structure) - 1)) {
+    
     J <- unique(structure[, h])
     NJ <- length(J)
-    MJ <- matrix(0, NJ, TT)
-    for (j in 1 : NJ) {
+    MJ <- matrix(0, NJ, Times)
+    
+    for (j in 1:NJ) {
       JJ <- which(structure[, h] == J[j])
-      if(length(JJ) == 1) {MJ[j, ] <- data[JJ, ]}
-      else{MJ[j, ] <- colSums(data[JJ, ])} 
+      
+      if (length(JJ) == 1) {
+        MJ[j, ] <- data[JJ, ]
+      } else {
+        MJ[j, ] <- colSums(data[JJ, ])
+      }
     }
-    p <- (apply(MJ, 1, function(x) {
-      
+    
+    p <- apply(MJ, 1, function(x) {
       x / max(sum(x), 10^(-15))
-      
-    }))
+    })
+    
     w <- rowSums(MJ) / N
     
     out <- cbind(out, sapply(order.q, S_alpha))
   }
   
-  p <- (apply(data, 1, function(x) {
-    
+  p <- apply(data, 1, function(x) {
     x / max(sum(x), 10^(-15))
-    
-  }))
+  })
+  
   w <- rowSums(data) / N
   
   out <- cbind(out, sapply(order.q, S_alpha))
   
-  # Highiest Level Synchrony
-  beta <- out[,2] - out[,3]
+  # Highest Level Synchrony
+  beta <- out[, 2] - out[, 3]
   
   J <- unique(structure[, 1])
   NJ <- length(J)
-  MJ <- matrix(0, NJ, TT)
-  for (j in 1 : NJ) {
+  MJ <- matrix(0, NJ, Times)
+  
+  for (j in 1:NJ) {
     JJ <- which(structure[, 1] == J[j])
-    if(length(JJ) == 1) {MJ[j, ] <- data[JJ, ]}
-    else{MJ[j, ] <- colSums(data[JJ, ])} 
+    
+    if (length(JJ) == 1) {
+      MJ[j, ] <- data[JJ, ]
+    } else {
+      MJ[j, ] <- colSums(data[JJ, ])
+    }
   }
-  p <- (apply(MJ, 1, function(x) {
-    
+  
+  p <- apply(MJ, 1, function(x) {
     x / max(sum(x), 10^(-15))
-    
-  }))
+  })
+  
   w <- rowSums(MJ) / N
   
-  Max_h <- function(q){
-    if(q == 1){
-      A <- exp(-sum(w * apply(p, 2, function(x) sum(x[x > 0] * log(x[x > 0])))))
+  Max_h <- function(q) {
+    
+    if (q == 1) {
+      
+      Gamma <- out[out$order_q == 1, 2] * (Times - 1) + 1
+      
+      
+      A <- exp(-sum(w * apply(p, 2, function(x) {
+        sum(x[x > 0] * log(x[x > 0]))
+      })))
+      
       WP <- t(p) * w
+      
       J <- exp(-sum(WP[WP > 0] * log(WP[WP > 0])))
-      J <- ifelse(J > TT, 1 / NJ * J + (1 - 1 / NJ) * TT, J)
-      (J - A) / (TT - 1)
-    }
-    else{
-      A <- sum(w * apply(p, 2, function(x) sum(x[x>0]^q)))^(1 / (1 - q))
-      J <- sum((w^q) * apply(p, 2, function(x) sum(x[x>0]^q)))^(1 / (1 - q))
-      J <- ifelse(J > TT, 1 / NJ * J + (1 - 1 / NJ) * TT, J)
-      (J - A) / (TT - 1)
+      
+      if(dim(p)[1]>dim(p)[2]){
+        
+        (Gamma - 1) / (Times - 1)
+        
+      }else{
+        
+        (Gamma - A * (Gamma / J)) / (Times - 1)
+        
+      }
+      
+      
+    } else {
+      
+      Gamma <- out[out$order_q == q, 2] * (Times - 1) + 1
+      
+      A <- sum(w * apply(p, 2, function(x) {
+        sum(x[x > 0]^q)
+      }))^(1 / (1 - q))
+      
+      J <- sum((w^q) * apply(p, 2, function(x) {
+        sum(x[x > 0]^q)
+      }))^(1 / (1 - q))
+      
+      if(dim(p)[1]>dim(p)[2]){
+        
+        (Gamma - 1) / (Times - 1)
+        
+      }else{
+        
+        (Gamma - A * (Gamma / J)) / (Times - 1)
+        
+      }
     }
   }
   
@@ -389,20 +503,27 @@ iSTAY_Hier <- function (data, structure, order.q = c(1, 2), Alltime = TRUE, star
   
   out <- cbind(out, 1 - beta / beta_max)
   
-  for (h in 2 : (ncol(structure))) {
+  for (h in 2:ncol(structure)) {
+    
     beta <- out[, (h + 1)] - out[, (h + 2)]
     
     K <- unique(structure[, h - 1])
     NK <- length(K)
-    MK <- matrix(0, NK, TT)
-    for (k in 1 : NK) {
+    MK <- matrix(0, NK, Times)
+    
+    for (k in 1:NK) {
       KK <- which(structure[, h - 1] == K[k])
-      if(length(KK) == 1) {MK[k,] <- data[KK,]}
-      else{MK[k,] <- colSums(data[KK,])} 
+      
+      if (length(KK) == 1) {
+        MK[k, ] <- data[KK, ]
+      } else {
+        MK[k, ] <- colSums(data[KK, ])
+      }
     }
     
     wk.temp <- rep(0, nrow(data))
     nk.temp <- rep(0, nrow(data))
+    
     for (k in 1:NK) {
       KK <- which(structure[, h - 1] == K[k])
       wk.temp[KK] <- rowSums(MK)[k] / N
@@ -411,65 +532,105 @@ iSTAY_Hier <- function (data, structure, order.q = c(1, 2), Alltime = TRUE, star
     
     J <- unique(structure[, h])
     NJ <- length(J)
-    MJ <- matrix(0, NJ, TT)
+    MJ <- matrix(0, NJ, Times)
     wk <- rep(0, NJ)
     nk <- rep(0, NJ)
-    for (j in 1 : NJ) {
+    
+    for (j in 1:NJ) {
       JJ <- which(structure[, h] == J[j])
       
-      if(length(JJ) == 1) {
-        MJ[j,] <- data[JJ,]
+      if (length(JJ) == 1) {
+        MJ[j, ] <- data[JJ, ]
         wk[j] <- wk.temp[JJ]
         nk[j] <- nk.temp[JJ]
-      }
-      else{
-        MJ[j,] <- colSums(data[JJ,])
-        wk[j] <- (wk.temp[JJ[1]])
+      } else {
+        MJ[j, ] <- colSums(data[JJ, ])
+        wk[j] <- wk.temp[JJ[1]]
         nk[j] <- nk.temp[JJ[1]]
-      } 
+      }
     }
-    p <- (apply(MJ, 1, function(x) {
-      
+    
+    p <- apply(MJ, 1, function(x) {
       x / max(sum(x), 10^(-15))
-      
-    }))
+    })
+    
     w <- rowSums(MJ) / N
     nn <- apply(MJ, 1, sum)
     
-    Max_d <- function(q){
-      if(q == 1){
-        A <- exp(-sum((wk * (nn / nk)) * apply(p, 2, function(x) sum(x[x>0] * log(x[x>0])))))
+    Max_d <- function(q) {
+      
+      if (q == 1) {
+        
+        A <- exp(-sum((wk * (nn / nk)) * apply(p, 2, function(x) {
+          sum(x[x > 0] * log(x[x > 0]))
+        })))
+        
         WP <- t(p) * (nn / nk)
-        J <- exp(-sum(wk * apply(WP, 1, function(x) sum(x[x>0] * log(x[x>0])))))
-        J <- ifelse(J > TT, 1 / NJ * J + (1 - 1 / NJ) * TT, J)
-        (J - A) / (TT - 1)
-      }
-      else{
-        A <- sum((wk * (nn / nk)) * apply(p, 2, function(x) sum(x[x>0]^q)))^(1 / (1 - q))
-        J <- sum((wk * (nn / nk)^q) * apply(p, 2, function(x) sum(x[x>0]^q)))^(1 / (1 - q))
-        J <- ifelse(J > TT, 1 / NJ * J + (1 - 1 / NJ) * TT, J)
-        (J - A) / (TT - 1)
+        
+        J <- exp(-sum(wk * apply(WP, 1, function(x) {
+          sum(x[x > 0] * log(x[x > 0]))
+        })))
+        
+        Gamma <- out[out$order_q == 1, (h + 1)] * (Times - 1) + 1
+        
+        
+        if(dim(p)[1]>dim(p)[2]){
+          
+          (Gamma - 1) / (Times - 1)
+          
+        }else{
+          
+          (Gamma - A * (Gamma / J)) / (Times - 1)
+          
+        }
+        
+      } else {
+        
+        A <- sum((wk * (nn / nk)) * apply(p, 2, function(x) {
+          sum(x[x > 0]^q)
+        }))^(1 / (1 - q))
+        
+        J <- sum((wk * (nn / nk)^q) * apply(p, 2, function(x) {
+          sum(x[x > 0]^q)
+        }))^(1 / (1 - q))
+        
+        Gamma <- out[out$order_q == q, (h + 1)] * (Times - 1) + 1
+        
+        if(dim(p)[1]>dim(p)[2]){
+          
+          (Gamma - 1) / (Times - 1)
+          
+        }else{
+          
+          (Gamma - A * (Gamma / J)) / (Times - 1)
+          
+        }
       }
     }
     
     beta_max <- sapply(order.q, Max_d)
     
-    out <- cbind(out, (1 - beta / beta_max))
-    
-    
+    out <- cbind(out, 1 - beta / beta_max)
   }
   
-  colnames(out) <- c("Order.q" ,"S_gamma", paste0("S_alpha",(nStruc - 1) : 1), paste0("Synchrony", (nStruc-1):1))
+  colnames(out) <- c(
+    "Order.q",
+    "S_gamma",
+    paste0("S_alpha", (nStruc - 1):1),
+    paste0("Synchrony", (nStruc - 1):1)
+  )
   
-  return(data.frame(Hier_level = rep(nStruc : 1, each = length(order.q)),
-                    Order_q = rep(order.q, nStruc),
-                    Gamma = c(out[, 2], out[, 2 : nStruc] |> unlist()),
-                    Alpha = c(rep(NA, length(order.q)), out[, 3 : (nStruc + 1)] |> unlist()),
-                    Synchrony = c(rep(NA, length(order.q)), out[, (nStruc + 2) : (nStruc * 2)] |> unlist())) |>
-           dplyr::mutate(Beta = Gamma - Alpha, .before = Synchrony))
-  
+  return(
+    data.frame(
+      Hier_level = rep(nStruc:1, each = length(order.q)),
+      Order_q = rep(order.q, nStruc),
+      Gamma = c(out[, 2], out[, 2:nStruc] |> unlist()),
+      Alpha = c(rep(NA, length(order.q)), out[, 3:(nStruc + 1)] |> unlist()),
+      Synchrony = c(rep(NA, length(order.q)), out[, (nStruc + 2):(nStruc * 2)] |> unlist())
+    ) |>
+      dplyr::mutate(Beta = Gamma - Alpha, .before = Synchrony)
+  )
 }
-
 
 
 #' ggplot2 extension for plotting stability and synchrony profiles.
@@ -715,6 +876,11 @@ ggiSTAY_qprofile <- function(output){
       value   = c(output$Gamma, output$Alpha, output$Beta, output$Synchrony),
       type    = rep(c("Gamma", "Alpha", "Beta", "Synchrony"), each = nrow(output))
     )
+    
+    if ("Weight" %in% colnames(output)) {
+      stab_plotdat$Weight <- rep(output$Weight, 4)
+    }
+    
     stab_plotdat$type <- factor(stab_plotdat$type, levels = c("Gamma","Alpha","Beta","Synchrony"))
     
     if (length(unique(stab_plotdat$Dataset)) <= 4) {
@@ -739,6 +905,12 @@ ggiSTAY_qprofile <- function(output){
         legend.key.size = grid::unit(0.8, "cm"),
         axis.title   = ggplot2::element_text(size = 16)
       )
+    
+    if ("Weight" %in% colnames(output)) {
+      plotout <- plotout +
+        ggplot2::ggtitle(paste0("Weighting scheme: ", unique(output$Weight)))
+    }
+    
   }
   
   return(plotout)
@@ -804,35 +976,82 @@ ggiSTAY_qprofile <- function(output){
 #'
 #' ## Multiple time series analysis
 #' # Analyze the stability and synchrony within each metacommunity
-#' # and their relationships with diversity based on 20 metacommunities
-#' # See Example 6 in the iSTAY vignette for the output.
+#' # using equal weights
 #' metacommunities <- Data_Jena_20_metacommunities
-#' output_metacommunities_div <- iSTAY_Multiple(data = metacommunities, 
-#'                                      order.q = c(1,2), Alltime = TRUE)
-#' output_metacommunities_div <- data.frame(output_metacommunities_div, 
-#'                                     log2_sowndiv = log2(as.numeric(do.call(rbind, 
-#'                                     strsplit(output_metacommunities_div[, 1], "_"))[, 2])),
-#'                                     block = do.call(rbind, 
-#'                                     strsplit(output_metacommunities_div[, 1], "_"))[, 1])
+#' output_metacommunities_equal_div <- iSTAY_Multiple(
+#'                                      data = metacommunities,
+#'                                      order.q = c(1, 2),
+#'                                      equal_weights = TRUE,
+#'                                      Alltime = TRUE)
+#' output_metacommunities_equal_div <- data.frame(
+#'                                      output_metacommunities_equal_div,
+#'                                      log2_sowndiv = log2(as.numeric(do.call(rbind,
+#'                                      strsplit(output_metacommunities_equal_div[, 1], "_"))[, 2])),
+#'                                      block = do.call(rbind,
+#'                                      strsplit(output_metacommunities_equal_div[, 1], "_"))[, 1])
 #'
-#' ggiSTAY_analysis(output = output_metacommunities_div, x_variable = "log2_sowndiv",
-#'                     by_group = "block", model = "LMM")
+#' ggiSTAY_analysis(output = output_metacommunities_equal_div,
+#'                  x_variable = "log2_sowndiv",
+#'                  by_group = "block",
+#'                  model = "LMM")
+#'
+#' # Analyze the stability and synchrony within each metacommunity
+#' # using size/biomass weights
+#' output_metacommunities_biomass_div <- iSTAY_Multiple(
+#'                                        data = metacommunities,
+#'                                        order.q = c(1, 2),
+#'                                        equal_weights = FALSE,
+#'                                        Alltime = TRUE)
+#' output_metacommunities_biomass_div <- data.frame(
+#'                                        output_metacommunities_biomass_div,
+#'                                        log2_sowndiv = log2(as.numeric(do.call(rbind,
+#'                                        strsplit(output_metacommunities_biomass_div[, 1], "_"))[, 2])),
+#'                                        block = do.call(rbind,
+#'                                        strsplit(output_metacommunities_biomass_div[, 1], "_"))[, 1])
+#'
+#' ggiSTAY_analysis(output = output_metacommunities_biomass_div,
+#'                  x_variable = "log2_sowndiv",
+#'                  by_group = "block",
+#'                  model = "LMM")
 #'
 #' # Analyze the stability and synchrony within each metapopulation
-#' # and their relationships with diversity based on 76 metapopulations
-#' # See Example 8 in the iSTAY vignette for the output.
-#' 
+#' # using equal weights
 #' metapopulations <- Data_Jena_76_metapopulations
-#' output_metapopulations_div <- iSTAY_Multiple(data = metapopulations,
-#'                                               order.q=c(1,2), Alltime=TRUE)
-#' output_metapopulations_div <- data.frame(output_metapopulations_div,
-#'                              log2_sowndiv = log2(as.numeric(do.call(rbind,
-#'                              strsplit(output_metapopulations_div[,1],"[._]+"))[,3])),
-#'                              block = do.call(rbind, 
-#'                              strsplit(output_metapopulations_div[,1],"_"))[,2])
+#' output_metapopulations_equal_div <- iSTAY_Multiple(
+#'                                      data = metapopulations,
+#'                                      order.q = c(1, 2),
+#'                                      equal_weights = TRUE,
+#'                                      Alltime = TRUE)
+#' output_metapopulations_equal_div <- data.frame(
+#'                                      output_metapopulations_equal_div,
+#'                                      log2_sowndiv = log2(as.numeric(do.call(rbind,
+#'                                      strsplit(output_metapopulations_equal_div[, 1], "[._]+"))[, 3])),
+#'                                      block = do.call(rbind,
+#'                                      strsplit(output_metapopulations_equal_div[, 1], "_"))[, 2])
 #'
-#' ggiSTAY_analysis(output = output_metapopulations_div, x_variable = "log2_sowndiv",
-#'                     by_group = "block", model = "LMM")
+#' ggiSTAY_analysis(output = output_metapopulations_equal_div,
+#'                  x_variable = "log2_sowndiv",
+#'                  by_group = "block",
+#'                  model = "LMM")
+#'
+#' # Analyze the stability and synchrony within each metapopulation
+#' # using size/biomass weights
+#' output_metapopulations_biomass_div <- iSTAY_Multiple(
+#'                                        data = metapopulations,
+#'                                        order.q = c(1, 2),
+#'                                        equal_weights = FALSE,
+#'                                        Alltime = TRUE)
+#' output_metapopulations_biomass_div <- data.frame(
+#'                                        output_metapopulations_biomass_div,
+#'                                        log2_sowndiv = log2(as.numeric(do.call(rbind,
+#'                                        strsplit(output_metapopulations_biomass_div[, 1], "[._]+"))[, 3])),
+#'                                        block = do.call(rbind,
+#'                                        strsplit(output_metapopulations_biomass_div[, 1], "_"))[, 2])
+#'
+#' ggiSTAY_analysis(output = output_metapopulations_biomass_div,
+#'                  x_variable = "log2_sowndiv",
+#'                  by_group = "block",
+#'                  model = "LMM")
 #'
 #' @export
 
@@ -1202,20 +1421,29 @@ ggiSTAY_analysis <- function(output, x_variable, by_group=NULL, model="LMM"){
       lm_sign[which(rownames(lm_sign)==yy),4] 
     }) 
     
-    plotdata_Stab <- data.frame(Dataset = rep(plotdata$Dataset, 4), 
-                                Order_q = rep(plotdata$Order_q, 4), 
-                                Stability = c(plotdata$Gamma, 
-                                              plotdata$Alpha, 
-                                              plotdata$Beta, 
-                                              plotdata$Synchrony), 
-                                pred = c(plotdata$pred_G, plotdata$pred_A, 
-                                         plotdata$pred_BA, plotdata$pred_S), 
-                                sign = c(plotdata$sign_G, plotdata$sign_A, 
-                                         plotdata$sign_BA, plotdata$sign_S), 
-                                type = rep(c("Gamma","Alpha", "Beta","Synchrony"), 
-                                           each = nrow(plotdata)), 
-                                Xvariable = rep(plotdata$Xvariable, 4)
-    ) 
+    plotdata_Stab <- data.frame(
+      Dataset = rep(plotdata$Dataset, 4), 
+      Order_q = rep(plotdata$Order_q, 4), 
+      Stability = c(plotdata$Gamma, 
+                    plotdata$Alpha, 
+                    plotdata$Beta, 
+                    plotdata$Synchrony), 
+      pred = c(plotdata$pred_G, plotdata$pred_A, 
+               plotdata$pred_BA, plotdata$pred_S), 
+      sign = c(plotdata$sign_G, plotdata$sign_A, 
+               plotdata$sign_BA, plotdata$sign_S), 
+      type = rep(c("Gamma", "Alpha", "Beta", "Synchrony"), 
+                 each = nrow(plotdata)), 
+      Xvariable = rep(plotdata$Xvariable, 4)
+    )
+    
+    if ("Weight" %in% colnames(plotdata)) {
+      plotdata_Stab$Weight <- rep(plotdata$Weight, 4)
+      plotdata_Stab$Weight <- factor(
+        plotdata_Stab$Weight,
+        levels = c("Equal weight", "Biomass weight")
+      )
+    }
     
     if(is.null(by_group)==FALSE){ 
       
@@ -1421,6 +1649,16 @@ ggiSTAY_analysis <- function(output, x_variable, by_group=NULL, model="LMM"){
               legend.key.size = grid::unit(0.8, 'cm'), 
               axis.title = ggplot2::element_text(size=16)) + 
         ggplot2::guides(linetype = ggplot2::guide_legend(keywidth = 2.5)) 
+    }
+    
+    
+    if ("Weight" %in% colnames(plotdata_Stab)) {
+      if (length(unique(plotdata_Stab$Weight)) == 1) {
+        plotout1 <- plotout1 +
+          ggplot2::ggtitle(
+            paste0("Weighting scheme: ", unique(plotdata_Stab$Weight))
+          )
+      }
     }
     
     plotout <- plotout1 

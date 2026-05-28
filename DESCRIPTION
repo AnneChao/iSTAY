@@ -1,23 +1,27 @@
 Package: iSTAY
 Type: Package
 Title: Information-Based Stability and Synchrony Measures
-Version: 1.0.0
-Date: 2025-10-16
-Author: Anne Chao [aut, cre], Yu-Ting Huang [aut], Johnny Shia [aut]
+Version: 1.1.0
+Date: 2026-05-28
+Author: Anne Chao [aut, cre], Yu-Ti Lee [aut], Keng-Lei Lin [aut], Po-Yen Chuang[aut]
 Maintainer: Anne Chao <chao@stat.nthu.edu.tw>
 Authors@R:
   c(person("Anne",
            "Chao",
            role = c("aut", "cre"),
            email = "chao@stat.nthu.edu.tw"),
-    person("Yu-Ting", 
-           "Huang", 
+    person("Yu-Ti", 
+           "Lee", 
            role = "aut",
-           email = "hamy0606s@gmail.com"),
-    person("Johnny", 
-           "Shia", 
+           email = "didil0907@gmail.com"),
+    person("Keng-Lei", 
+           "Lin", 
            role = "aut",
-           email = "johnny70426@gmail.com")
+           email = "boolin20021106@gmail.com"),
+    person("Po-Yen", 
+           "Chuang", 
+           role = "aut",
+           email = "zerind0970983096@gmail.com")
   )
 Description: Provides functions to to compute a continuum of information-based measures 
  for quantifying the temporal stability of populations, communities, and ecosystems, 

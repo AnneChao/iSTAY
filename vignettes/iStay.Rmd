@@ -1,7 +1,7 @@
 ---
 title: "An Introductory Vignette for iSTAY Through Examples"
-author: "Anne Chao, Yu-Ting Hwang, and Johnny Shia"
-date: "Latest version 1.0.0 (Oct. 2025)"
+author: "Anne Chao, Yu-Ti Lee, Keng-Lei Lin, and Po-Yen Chuang"
+date: "Latest version 1.1.0 (June. 2026)"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{iSTAY}
@@ -90,10 +90,10 @@ This package provides five main functions, listed below with their default argum
 iSTAY_Single(data, order.q = c(1, 2), Alltime = TRUE, start_T = NULL, end_T = NULL)
 ```
 
-- **iSTAY_Multiple**: computes gamma, alpha, and beta stability, as well as synchrony, for multiple time-series of biomass or other relevant variables.
+- **iSTAY_Multiple**: computes gamma, alpha, and beta stability, as well as synchrony, for multiple time-series of biomass or other relevant variables. The argument `equal_weights` controls whether all time series are assigned equal weights (`TRUE`) or weighted by their total biomass/abundance (`FALSE`).
 
 ```{r, eval=FALSE}
-iSTAY_Multiple(data, order.q = c(1, 2), Alltime = TRUE, start_T = NULL, end_T = NULL)
+iSTAY_Multiple(data, order.q = c(1, 2), equal_weights = TRUE, Alltime = TRUE, start_T = NULL, end_T = NULL)
 ```
 
 - **iSTAY_Hier**: computes gamma, alpha, and beta stability, as well as synchrony, at each hierarchical level for hierarchical time series of biomass or other variables. 
@@ -350,86 +350,241 @@ ggiSTAY_analysis(output=output_individual_populations_div, x_variable="log2_sown
 
 ## Example 5: Comparing the gamma, alpha, and beta stability profiles, as well as the synchrony profiles for two selected metacommunities
 
-Run the following code to compute the gamma, alpha and beta stability, as well as synchrony values of q = 0.1 to q = 2 in increments 0.2 for two selected metacommunities ("B1_1" and "B3_2"). Only the first ten rows of the output are displayed.
+Run the following code to compute the gamma, alpha and beta stability, as well as synchrony values of q = 0.1 to q = 2 in increments 0.2 for two selected metacommunities ("B1_1" and "B3_2"). We show both equal-weighted and biomass-weighted analyses. Only the first ten rows of each output are displayed.
+
+### Equal-weighted analysis
 
 ```{r, eval=F}
 metacommunities <- Data_Jena_20_metacommunities
-output_two_metacommunities_q <- iSTAY_Multiple(data = metacommunities[which(names(metacommunities) %in% c("B1_1",  "B3_2"))],
-                                order.q = seq(0.1,2,0.1), Alltime=TRUE)
-head(output_two_metacommunities_q, 10)
+output_two_metacommunities_equal_q <- iSTAY_Multiple(
+  data = metacommunities[which(names(metacommunities) %in% c("B1_1", "B3_2"))],
+  order.q = seq(0.1, 2, 0.1),
+  equal_weights = TRUE,
+  Alltime = TRUE
+)
+head(output_two_metacommunities_equal_q, 10)
 ```
 
 ```{r, echo=F}
 metacommunities <- Data_Jena_20_metacommunities
-output_two_metacommunities_q <- iSTAY_Multiple(data = metacommunities[which(names(metacommunities) %in% c("B1_1",  "B3_2"))],
-                                order.q = seq(0.1,2,0.1), Alltime=TRUE)
-head(output_two_metacommunities_q, 10)
+output_two_metacommunities_equal_q <- iSTAY_Multiple(
+  data = metacommunities[which(names(metacommunities) %in% c("B1_1", "B3_2"))],
+  order.q = seq(0.1, 2, 0.1),
+  equal_weights = TRUE,
+  Alltime = TRUE
+)
+head(output_two_metacommunities_equal_q, 10)
 ```
 
-The following code returns the gamma, alpha, and beta stability profiles, as well as synchrony profiles for the two selected metacommunities.
+The following code returns the gamma, alpha, and beta stability profiles, as well as synchrony profiles, using equal weights.
 
 ```{r, fig.align='center', fig.width = 7, fig.height = 4.5}
-ggiSTAY_qprofile(output = output_two_metacommunities_q)
+ggiSTAY_qprofile(output = output_two_metacommunities_equal_q)
+```
+
+### Biomass-weighted analysis
+
+```{r, eval=F}
+output_two_metacommunities_biomass_q <- iSTAY_Multiple(
+  data = metacommunities[which(names(metacommunities) %in% c("B1_1", "B3_2"))],
+  order.q = seq(0.1, 2, 0.1),
+  equal_weights = FALSE,
+  Alltime = TRUE
+)
+head(output_two_metacommunities_biomass_q, 10)
+```
+
+```{r, echo=F}
+output_two_metacommunities_biomass_q <- iSTAY_Multiple(
+  data = metacommunities[which(names(metacommunities) %in% c("B1_1", "B3_2"))],
+  order.q = seq(0.1, 2, 0.1),
+  equal_weights = FALSE,
+  Alltime = TRUE
+)
+head(output_two_metacommunities_biomass_q, 10)
+```
+
+The following code returns the gamma, alpha, and beta stability profiles, as well as synchrony profiles, using biomass weights.
+
+```{r, fig.align='center', fig.width = 7, fig.height = 4.5}
+ggiSTAY_qprofile(output = output_two_metacommunities_biomass_q)
 ```
 
 <br><br>
 
 ## Example 6: Assessing the relationships between diversity and gamma, alpha, and beta stability, as well as synchrony, based on 20 metacommunities
 
-Run the following code to compute the gamma, alpha, and beta stability, as well as synchrony values, at orders q = 1 and q = 2 for all 20 metacommunities. The corresponding diversity (log2_sowndiv) and block identifiers are also included. The block identifier is used to set the `by_group` argument; it colors points by group and serves as the random effect for both intercept and slope when the Linear Mixed Model is selected in `ggiSTAY_analysis`. Only the first ten rows of the output are displayed. 
+Run the following code to compute the gamma, alpha, and beta stability, as well as synchrony values, at orders q = 1 and q = 2 for all 20 metacommunities. The corresponding diversity (log2_sowndiv) and block identifiers are also included. The block identifier is used to set the `by_group` argument; it colors points by group and serves as the random effect for both intercept and slope when the Linear Mixed Model is selected in `ggiSTAY_analysis`. We show both equal-weighted and biomass-weighted analyses. Only the first ten rows of each output are displayed.
+
+### Equal-weighted analysis
 
 ```{r, eval=FALSE}
-output_metacommunities_div <- iSTAY_Multiple(data = metacommunities, order.q=c(1,2), Alltime=TRUE)
+output_metacommunities_equal_div <- iSTAY_Multiple(
+  data = metacommunities,
+  order.q = c(1, 2),
+  equal_weights = TRUE,
+  Alltime = TRUE
+)
 
-output_metacommunities_div <- data.frame(output_multi_div,
-                               log2_sowndiv = log2(as.numeric(do.call(rbind, strsplit(output_metacommunities_div[, 1], "_"))[, 2])),
-         block = do.call(rbind, strsplit(output_metacommunities_div[, 1], "_"))[, 1])
-rownames(output_metacommunities_div) <- NULL
-head(cbind(output_metacommunities_div[,1:2], round(output_metacommunities_div[3:6],3), output_metacommunities_div[,7:8]), 10)
+output_metacommunities_equal_div <- data.frame(
+  output_metacommunities_equal_div,
+  log2_sowndiv = log2(as.numeric(do.call(rbind,
+    strsplit(output_metacommunities_equal_div[, 1], "_"))[, 2])),
+  block = do.call(rbind,
+    strsplit(output_metacommunities_equal_div[, 1], "_"))[, 1]
+)
+rownames(output_metacommunities_equal_div) <- NULL
+head(cbind(output_metacommunities_equal_div[, 1:2],
+           round(output_metacommunities_equal_div[, 3:6], 3),
+           output_metacommunities_equal_div[, 7:9]), 10)
 ```
 
 ```{r, echo=FALSE}
-output_metacommunities_div <- iSTAY_Multiple(data = metacommunities, order.q = c(1,2), Alltime = TRUE)
+output_metacommunities_equal_div <- iSTAY_Multiple(
+  data = metacommunities,
+  order.q = c(1, 2),
+  equal_weights = TRUE,
+  Alltime = TRUE
+)
 
-output_metacommunities_div <- data.frame(output_metacommunities_div,
-                               log2_sowndiv = log2(as.numeric(do.call(rbind, strsplit(output_metacommunities_div[, 1], "_"))[, 2])),
-         block = do.call(rbind, strsplit(output_metacommunities_div[, 1], "_"))[, 1])
-rownames(output_metacommunities_div) <- NULL
-head(cbind(output_metacommunities_div[,1:2], round(output_metacommunities_div[3:6],3), output_metacommunities_div[,7:8]), 10)
+output_metacommunities_equal_div <- data.frame(
+  output_metacommunities_equal_div,
+  log2_sowndiv = log2(as.numeric(do.call(rbind,
+    strsplit(output_metacommunities_equal_div[, 1], "_"))[, 2])),
+  block = do.call(rbind,
+    strsplit(output_metacommunities_equal_div[, 1], "_"))[, 1]
+)
+rownames(output_metacommunities_equal_div) <- NULL
+head(cbind(output_metacommunities_equal_div[, 1:2],
+           round(output_metacommunities_equal_div[, 3:6], 3),
+           output_metacommunities_equal_div[, 7:9]), 10)
 ```
 
-The following code returns the relationships between diversity and gamma, alpha, and beta stability, as well as synchrony based on 20 metacommunities.
+The following code returns the relationships between diversity and gamma, alpha, and beta stability, as well as synchrony, based on 20 metacommunities using equal weights.
 
-```{r,fig.width = 8, fig.height=9.5}
-ggiSTAY_analysis(output = output_metacommunities_div, x_variable = "log2_sowndiv", 
-                    by_group = "block", model = "LMM")
+```{r, fig.width = 8, fig.height = 9.5}
+ggiSTAY_analysis(output = output_metacommunities_equal_div,
+                 x_variable = "log2_sowndiv",
+                 by_group = "block",
+                 model = "LMM")
+```
+
+### Biomass-weighted analysis
+
+```{r, eval=FALSE}
+output_metacommunities_biomass_div <- iSTAY_Multiple(
+  data = metacommunities,
+  order.q = c(1, 2),
+  equal_weights = FALSE,
+  Alltime = TRUE
+)
+
+output_metacommunities_biomass_div <- data.frame(
+  output_metacommunities_biomass_div,
+  log2_sowndiv = log2(as.numeric(do.call(rbind,
+    strsplit(output_metacommunities_biomass_div[, 1], "_"))[, 2])),
+  block = do.call(rbind,
+    strsplit(output_metacommunities_biomass_div[, 1], "_"))[, 1]
+)
+rownames(output_metacommunities_biomass_div) <- NULL
+head(cbind(output_metacommunities_biomass_div[, 1:2],
+           round(output_metacommunities_biomass_div[, 3:6], 3),
+           output_metacommunities_biomass_div[, 7:9]), 10)
+```
+
+```{r, echo=FALSE}
+output_metacommunities_biomass_div <- iSTAY_Multiple(
+  data = metacommunities,
+  order.q = c(1, 2),
+  equal_weights = FALSE,
+  Alltime = TRUE
+)
+
+output_metacommunities_biomass_div <- data.frame(
+  output_metacommunities_biomass_div,
+  log2_sowndiv = log2(as.numeric(do.call(rbind,
+    strsplit(output_metacommunities_biomass_div[, 1], "_"))[, 2])),
+  block = do.call(rbind,
+    strsplit(output_metacommunities_biomass_div[, 1], "_"))[, 1]
+)
+rownames(output_metacommunities_biomass_div) <- NULL
+head(cbind(output_metacommunities_biomass_div[, 1:2],
+           round(output_metacommunities_biomass_div[, 3:6], 3),
+           output_metacommunities_biomass_div[, 7:9]), 10)
+```
+
+The following code returns the relationships between diversity and gamma, alpha, and beta stability, as well as synchrony, based on 20 metacommunities using biomass weights.
+
+```{r, fig.width = 8, fig.height = 9.5}
+ggiSTAY_analysis(output = output_metacommunities_biomass_div,
+                 x_variable = "log2_sowndiv",
+                 by_group = "block",
+                 model = "LMM")
 ```
 
 <br><br>
 
-## Exammple 7: Comparing the gamma, alpha, and beta stability profiles, as well as the synchrony profiles in two selected metapopulations
+## Example 7: Comparing the gamma, alpha, and beta stability profiles, as well as the synchrony profiles in two selected metapopulations
 
-Run the following code to compute the gamma, alpha and beta stability, as well as synchrony values of q = 0.1 to q = 2 in increments 0.2 for two selected metapopulations ("B1A04_B1_4" and "B4A14_B4_2"). Only the first ten rows of the output are displayed.
+Run the following code to compute the gamma, alpha and beta stability, as well as synchrony values of q = 0.1 to q = 2 in increments 0.2 for two selected metapopulations ("B1A04_B1_4" and "B4A14_B4_2"). We show both equal-weighted and biomass-weighted analyses. Only the first ten rows of each output are displayed.
 
+
+### Equal-weighted analysis
 
 ```{r, eval=F}
 metapopulations <- Data_Jena_76_metapopulations
-output_two_metapopulations_q <- iSTAY_Multiple(data = metapopulations[which(names(metapopulations) %in% c("B1A04_B1_4", "B4A14_B4_2"))],
-                                            order.q = seq(0.1,2,0.1), Alltime = TRUE)
-head(output_two_metapopulations_q, 10)
+output_two_metapopulations_equal_q <- iSTAY_Multiple(
+  data = metapopulations[which(names(metapopulations) %in% c("B1A04_B1_4", "B4A14_B4_2"))],
+  order.q = seq(0.1, 2, 0.1),
+  equal_weights = TRUE,
+  Alltime = TRUE
+)
+head(output_two_metapopulations_equal_q, 10)
 ```
 
 ```{r, echo=F}
 metapopulations <- Data_Jena_76_metapopulations
-output_two_metapopulations_q <- iSTAY_Multiple(data = metapopulations[which(names(metapopulations) %in% c("B1A04_B1_4", "B4A14_B4_2"))],
-                                            order.q = seq(0.1,2,0.1), Alltime = TRUE)
-head(output_two_metapopulations_q, 10)
+output_two_metapopulations_equal_q <- iSTAY_Multiple(
+  data = metapopulations[which(names(metapopulations) %in% c("B1A04_B1_4", "B4A14_B4_2"))],
+  order.q = seq(0.1, 2, 0.1),
+  equal_weights = TRUE,
+  Alltime = TRUE
+)
+head(output_two_metapopulations_equal_q, 10)
 ```
 
-The following code returns the gamma, alpha, and beta stability profiles, as well as synchrony profiles for the two selected metapopulations.
+The following code returns the gamma, alpha, and beta stability profiles, as well as synchrony profiles for the two selected metapopulations using equal weights.
 
 ```{r, fig.align='center', fig.width = 7, fig.height = 4.5}
-ggiSTAY_qprofile(output = output_two_metapopulations_q)
+ggiSTAY_qprofile(output = output_two_metapopulations_equal_q)
+```
+
+### Biomass-weighted analysis
+
+```{r, eval=F}
+output_two_metapopulations_biomass_q <- iSTAY_Multiple(
+  data = metapopulations[which(names(metapopulations) %in% c("B1A04_B1_4", "B4A14_B4_2"))],
+  order.q = seq(0.1, 2, 0.1),
+  equal_weights = FALSE,
+  Alltime = TRUE
+)
+head(output_two_metapopulations_biomass_q, 10)
+```
+
+```{r, echo=F}
+output_two_metapopulations_biomass_q <- iSTAY_Multiple(
+  data = metapopulations[which(names(metapopulations) %in% c("B1A04_B1_4", "B4A14_B4_2"))],
+  order.q = seq(0.1, 2, 0.1),
+  equal_weights = FALSE,
+  Alltime = TRUE
+)
+head(output_two_metapopulations_biomass_q, 10)
+```
+
+The following code returns the gamma, alpha, and beta stability profiles, as well as synchrony profiles for the two selected metapopulations using biomass weights.
+
+```{r, fig.align='center', fig.width = 7, fig.height = 4.5}
+ggiSTAY_qprofile(output = output_two_metapopulations_biomass_q)
 ```
 
 <br><br>
@@ -438,34 +593,111 @@ ggiSTAY_qprofile(output = output_two_metapopulations_q)
 
 Run the following code to compute the gamma, alpha, and beta stability, as well as synchrony values, at orders q = 1 and q = 2 for all 76 metapopulations. The corresponding diversity (log2_sowndiv) and block identifiers are also included. The block identifier is used to set the `by_group` argument; it colors points by group and serves as the random effect for both intercept and slope when the Linear Mixed Model is selected in `ggiSTAY_analysis`. Only the first ten rows of the output are displayed.
 
+
+### Equal-weighted analysis
+
 ```{r, eval=FALSE}
-output_metapopulations_div <- iSTAY_Multiple(data = metapopulations,
-                                          order.q = c(1,2), Alltime = TRUE)
-output_metapopulations_div <- data.frame(output_metapopulations_div,
-                             log2_sowndiv = log2(as.numeric(do.call(rbind,
-                                      strsplit(output_metapopulations_div[,1],"[._]+"))[,3])),
-                             block = do.call(rbind,
-                                   strsplit(output_metapopulations_div[,1],"_"))[,2])
-head(output_metapopulations_div, 10)
+output_metapopulations_equal_div <- iSTAY_Multiple(
+  data = metapopulations,
+  order.q = c(1, 2),
+  equal_weights = TRUE,
+  Alltime = TRUE
+)
+
+output_metapopulations_equal_div <- data.frame(
+  output_metapopulations_equal_div,
+  log2_sowndiv = log2(as.numeric(do.call(rbind,
+    strsplit(output_metapopulations_equal_div[, 1], "[._]+"))[, 3])),
+  block = do.call(rbind,
+    strsplit(output_metapopulations_equal_div[, 1], "_"))[, 2]
+)
+rownames(output_metapopulations_equal_div) <- NULL
+head(cbind(output_metapopulations_equal_div[, 1:2],
+           round(output_metapopulations_equal_div[, 3:6], 3),
+           output_metapopulations_equal_div[, 7:9]), 10)
 ```
 
 ```{r, echo=FALSE}
-output_metapopulations_div <- iSTAY_Multiple(data = metapopulations,
-                                          order.q = c(1,2), Alltime = TRUE)
-output_metapopulations_div <- data.frame(output_metapopulations_div,
-                             log2_sowndiv = log2(as.numeric(do.call(rbind,
-                                      strsplit(output_metapopulations_div[,1],"[._]+"))[,3])),
-                             block = do.call(rbind,
-                                   strsplit(output_metapopulations_div[,1],"_"))[,2])
-head(output_metapopulations_div, 10)
+output_metapopulations_equal_div <- iSTAY_Multiple(
+  data = metapopulations,
+  order.q = c(1, 2),
+  equal_weights = TRUE,
+  Alltime = TRUE
+)
 
+output_metapopulations_equal_div <- data.frame(
+  output_metapopulations_equal_div,
+  log2_sowndiv = log2(as.numeric(do.call(rbind,
+    strsplit(output_metapopulations_equal_div[, 1], "[._]+"))[, 3])),
+  block = do.call(rbind,
+    strsplit(output_metapopulations_equal_div[, 1], "_"))[, 2]
+)
+rownames(output_metapopulations_equal_div) <- NULL
+head(cbind(output_metapopulations_equal_div[, 1:2],
+           round(output_metapopulations_equal_div[, 3:6], 3),
+           output_metapopulations_equal_div[, 7:9]), 10)
 ```
 
-The following code returns the relationships between diversity and gamma, alpha, and beta stability, as well as synchrony, based on 20 metapopulations.
+The following code returns the relationships between diversity and gamma, alpha, and beta stability, as well as synchrony, based on 76 metapopulations using equal weights.
 
-```{r,fig.width = 8, fig.height=9.5}
-ggiSTAY_analysis(output=output_metapopulations_div, x_variable="log2_sowndiv",
-                    by_group="block", model="LMM")
+```{r, fig.width = 8, fig.height = 9.5}
+ggiSTAY_analysis(output = output_metapopulations_equal_div,
+                 x_variable = "log2_sowndiv",
+                 by_group = "block",
+                 model = "LMM")
+```
+
+### Biomass-weighted analysis
+
+```{r, eval=FALSE}
+output_metapopulations_biomass_div <- iSTAY_Multiple(
+  data = metapopulations,
+  order.q = c(1, 2),
+  equal_weights = FALSE,
+  Alltime = TRUE
+)
+
+output_metapopulations_biomass_div <- data.frame(
+  output_metapopulations_biomass_div,
+  log2_sowndiv = log2(as.numeric(do.call(rbind,
+    strsplit(output_metapopulations_biomass_div[, 1], "[._]+"))[, 3])),
+  block = do.call(rbind,
+    strsplit(output_metapopulations_biomass_div[, 1], "_"))[, 2]
+)
+rownames(output_metapopulations_biomass_div) <- NULL
+head(cbind(output_metapopulations_biomass_div[, 1:2],
+           round(output_metapopulations_biomass_div[, 3:6], 3),
+           output_metapopulations_biomass_div[, 7:9]), 10)
+```
+
+```{r, echo=FALSE}
+output_metapopulations_biomass_div <- iSTAY_Multiple(
+  data = metapopulations,
+  order.q = c(1, 2),
+  equal_weights = FALSE,
+  Alltime = TRUE
+)
+
+output_metapopulations_biomass_div <- data.frame(
+  output_metapopulations_biomass_div,
+  log2_sowndiv = log2(as.numeric(do.call(rbind,
+    strsplit(output_metapopulations_biomass_div[, 1], "[._]+"))[, 3])),
+  block = do.call(rbind,
+    strsplit(output_metapopulations_biomass_div[, 1], "_"))[, 2]
+)
+rownames(output_metapopulations_biomass_div) <- NULL
+head(cbind(output_metapopulations_biomass_div[, 1:2],
+           round(output_metapopulations_biomass_div[, 3:6], 3),
+           output_metapopulations_biomass_div[, 7:9]), 10)
+```
+
+The following code returns the relationships between diversity and gamma, alpha, and beta stability, as well as synchrony, based on 76 metapopulations using biomass weights.
+
+```{r, fig.width = 8, fig.height = 9.5}
+ggiSTAY_analysis(output = output_metapopulations_biomass_div,
+                 x_variable = "log2_sowndiv",
+                 by_group = "block",
+                 model = "LMM")
 ```
 
 <br><br>

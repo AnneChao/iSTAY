@@ -7,6 +7,7 @@
 iSTAY_Multiple(
   data,
   order.q = c(1, 2),
+  equal_weights = TRUE,
   Alltime = TRUE,
   start_T = NULL,
   end_T = NULL
@@ -16,6 +17,10 @@ iSTAY_Multiple(
 \item{data}{A \code{data.frame} containing multiple time series data, with sampling units as rows and time points as columns, or a \code{list} of \code{data.frames} with each data frame representing multiple time series.}
 
 \item{order.q}{A numerical vector specifying the orders of stability and synchrony. Default is c(1,2).}
+
+\item{equal_weights}{Logical. If \code{TRUE}, all time series are assigned equal weights when computing alpha and gamma stability.
+If \code{FALSE}, time series are weighted by their total abundance or biomass across all time points.
+Default is \code{TRUE}.}
 
 \item{Alltime}{Logical (\code{TRUE} or \code{FALSE}), indicating whether to use all time points in the data.}
 
@@ -34,17 +39,35 @@ a data frame with the following columns: \cr
 \code{iSTAY_Multiple} computes gamma, alpha, and beta stability, as well as synchrony, for multiple time-series data.
 }
 \examples{
-# Stability of multiple time series
+# Stability and synchrony of metacommunities using equal weights
 data("Data_Jena_20_metacommunities")
 metacommunities <- Data_Jena_20_metacommunities
-output_metacommunities <- iSTAY_Multiple(data = metacommunities, order.q = c(1,2), Alltime = TRUE)
-output_metacommunities
+output_metacommunities_equal <- iSTAY_Multiple(data = metacommunities,
+                                              order.q = c(1, 2),
+                                              equal_weights = TRUE,
+                                              Alltime = TRUE)
+output_metacommunities_equal
 
-# Stability of metapopulations
+# Stability and synchrony of metacommunities using size/biomass weights
+output_metacommunities_biomass <- iSTAY_Multiple(data = metacommunities,
+                                                order.q = c(1, 2),
+                                                equal_weights = FALSE,
+                                                Alltime = TRUE)
+output_metacommunities_biomass
+
+# Stability and synchrony of metapopulations using equal weights
 data("Data_Jena_76_metapopulations")
 metapopulations <- Data_Jena_76_metapopulations
-output_metapopulations <- iSTAY_Multiple(data = metapopulations, order.q = c(1,2), Alltime = TRUE)
-output_metapopulations
+output_metapopulations_equal <- iSTAY_Multiple(data = metapopulations,
+                                              order.q = c(1, 2),
+                                              equal_weights = TRUE,
+                                              Alltime = TRUE)
+output_metapopulations_equal
 
-
+# Stability and synchrony of metapopulations using size/biomass weights
+output_metapopulations_biomass <- iSTAY_Multiple(data = metapopulations,
+                                                order.q = c(1, 2),
+                                                equal_weights = FALSE,
+                                                Alltime = TRUE)
+output_metapopulations_biomass
 }
