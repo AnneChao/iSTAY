@@ -30,19 +30,24 @@ data("Data_Jena_hierarchical_structure")
 # See Example 1 in the iSTAY vignette for the output.
 
 individual_plots <- do.call(rbind, Data_Jena_20_metacommunities)
+
 output_two_plots_q <- iSTAY_Single(
                data = individual_plots[which(rownames(individual_plots) 
                \%in\% c("B1_4.B1A04", "B4_2.B4A14")),],
                order.q = seq(0.1,2,0.1), Alltime = TRUE)
+               
 ggiSTAY_qprofile(output = output_two_plots_q)
 
 # Plot the stability profiles of two selected populations
 # See Example 3 in the iSTAY vignette for the output.
+
 individual_populations <- do.call(rbind, Data_Jena_76_metapopulations)
+
 output_two_populations_q <- iSTAY_Single(
                data = individual_populations[which(rownames(individual_populations) 
                \%in\% c("B1A06_B1_16.BM_Ant.odo", "B1A06_B1_16.BM_Cam.pat")),],
                order.q = seq(0.1,2,0.1), Alltime = TRUE)
+               
 ggiSTAY_qprofile(output = output_two_populations_q)
 
 
@@ -52,9 +57,11 @@ ggiSTAY_qprofile(output = output_two_populations_q)
 # See Example 5 in the iSTAY vignette for the output.
 
 metacommunities <- Data_Jena_20_metacommunities
+
 output_two_metacommunities_q <- iSTAY_Multiple(
            data = metacommunities[which(names(metacommunities) \%in\% c("B1_1",  "B3_2"))],
            order.q = seq(0.1,2,0.1), Alltime = TRUE)
+           
 ggiSTAY_qprofile(output = output_two_metacommunities_q)
 
 # Plot the gamma, alpha and beta stability profiles, 
@@ -62,9 +69,11 @@ ggiSTAY_qprofile(output = output_two_metacommunities_q)
 # See Example 7 in the iSTAY vignette for the output.
 
 metapopulations <- Data_Jena_76_metapopulations
+
 output_two_metapopulations_q <- iSTAY_Multiple(
            data = metapopulations[which(names(metapopulations) \%in\% c("B1A04_B1_4", "B4A14_B4_2"))],
            order.q = seq(0.1,2,0.1), Alltime = TRUE)
+           
 ggiSTAY_qprofile(output = output_two_metapopulations_q)
 
 

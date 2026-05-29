@@ -24,6 +24,7 @@ For an \code{iSTAY_Multiple} object, this function returns a figure showing the 
 \code{ggiSTAY_analysis} is a graphical function based on the output from the functions \code{iSTAY_Single} or \code{iSTAY_Multiple}. It generates plots showing the relationships between stability (and synchrony if multiple time series are included) and an additional variable, such as diversity or another relevant factor.
 }
 \examples{
+
 data("Data_Jena_20_metacommunities")
 data("Data_Jena_76_metapopulations")
 data("Data_Jena_462_populations")
@@ -33,8 +34,11 @@ data("Data_Jena_hierarchical_structure")
 # Analyze the stability of individual plots and diversity-stability 
 # relationship based on 76 plots
 # See Example 2 in the iSTAY vignette for the output.
+
 individual_plots <- do.call(rbind, Data_Jena_20_metacommunities)
+
 output_individual_plots_div <- iSTAY_Single(data=individual_plots, order.q=c(1,2), Alltime=TRUE)
+
 output_individual_plots_div <- data.frame(output_individual_plots_div,
                                  log2_sowndiv = log2(as.numeric(do.call(rbind,
                                  strsplit(output_individual_plots_div[,1],"[._]+"))[,2])),
@@ -47,9 +51,12 @@ ggiSTAY_analysis(output = output_individual_plots_div, x_variable = "log2_sowndi
 # Analyze the stability of individual populations and diversity-stability 
 # relationships based on 462 populations
 # See Example 4 in the iSTAY vignette for the output.
+
 individual_populations <- do.call(rbind, Data_Jena_76_metapopulations)
+
 output_individual_populations_div <- iSTAY_Single(data = individual_populations,
                                          order.q=c(1,2), Alltime=TRUE)
+                                         
 output_individual_populations_div <- data.frame(output_individual_populations_div,
                               log2_sowndiv = log2(as.numeric(do.call(rbind,
                               strsplit(output_individual_populations_div[,1],"[._]+"))[,3])),
@@ -63,12 +70,15 @@ ggiSTAY_analysis(output = output_individual_populations_div, x_variable = "log2_
 ## Multiple time series analysis
 # Analyze the stability and synchrony within each metacommunity
 # using equal weights
+
 metacommunities <- Data_Jena_20_metacommunities
+
 output_metacommunities_equal_div <- iSTAY_Multiple(
                                      data = metacommunities,
                                      order.q = c(1, 2),
                                      equal_weights = TRUE,
                                      Alltime = TRUE)
+                                     
 output_metacommunities_equal_div <- data.frame(
                                      output_metacommunities_equal_div,
                                      log2_sowndiv = log2(as.numeric(do.call(rbind,
@@ -83,11 +93,13 @@ ggiSTAY_analysis(output = output_metacommunities_equal_div,
 
 # Analyze the stability and synchrony within each metacommunity
 # using size/biomass weights
+
 output_metacommunities_biomass_div <- iSTAY_Multiple(
                                        data = metacommunities,
                                        order.q = c(1, 2),
                                        equal_weights = FALSE,
                                        Alltime = TRUE)
+                                       
 output_metacommunities_biomass_div <- data.frame(
                                        output_metacommunities_biomass_div,
                                        log2_sowndiv = log2(as.numeric(do.call(rbind,
@@ -102,12 +114,15 @@ ggiSTAY_analysis(output = output_metacommunities_biomass_div,
 
 # Analyze the stability and synchrony within each metapopulation
 # using equal weights
+
 metapopulations <- Data_Jena_76_metapopulations
+
 output_metapopulations_equal_div <- iSTAY_Multiple(
                                      data = metapopulations,
                                      order.q = c(1, 2),
                                      equal_weights = TRUE,
                                      Alltime = TRUE)
+                                     
 output_metapopulations_equal_div <- data.frame(
                                      output_metapopulations_equal_div,
                                      log2_sowndiv = log2(as.numeric(do.call(rbind,
@@ -122,11 +137,13 @@ ggiSTAY_analysis(output = output_metapopulations_equal_div,
 
 # Analyze the stability and synchrony within each metapopulation
 # using size/biomass weights
+
 output_metapopulations_biomass_div <- iSTAY_Multiple(
                                        data = metapopulations,
                                        order.q = c(1, 2),
                                        equal_weights = FALSE,
                                        Alltime = TRUE)
+                                       
 output_metapopulations_biomass_div <- data.frame(
                                        output_metapopulations_biomass_div,
                                        log2_sowndiv = log2(as.numeric(do.call(rbind,

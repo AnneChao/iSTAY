@@ -7,7 +7,7 @@
 iSTAY_Multiple(
   data,
   order.q = c(1, 2),
-  equal_weights = TRUE,
+  equal_weights = FALSE,
   Alltime = TRUE,
   start_T = NULL,
   end_T = NULL
@@ -20,7 +20,7 @@ iSTAY_Multiple(
 
 \item{equal_weights}{Logical. If \code{TRUE}, all time series are assigned equal weights when computing alpha and gamma stability.
 If \code{FALSE}, time series are weighted by their total abundance or biomass across all time points.
-Default is \code{TRUE}.}
+Default is \code{FALSE}.}
 
 \item{Alltime}{Logical (\code{TRUE} or \code{FALSE}), indicating whether to use all time points in the data.}
 
