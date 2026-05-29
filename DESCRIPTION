@@ -32,18 +32,11 @@ Description: Provides functions to to compute a continuum of information-based m
  and methodological background is detailed in Chao et al. (2025) 
  <doi:10.1101/2025.08.20.671203>.
 License: GPL (>= 3)
-Imports: ggplot2 (>= 3.5.0),
-         stringr,
-         lmerTest,
-         lme4,
-         dplyr,
-         ggpubr
+Imports: ggplot2 (>= 3.5.0), stringr, lmerTest, lme4, dplyr, ggpubr
 Encoding: UTF-8
 LazyData: true
 Depends: 
     R (>= 4.1.0)
-Suggests: 
-    knitr,
-    rmarkdown
+Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 7.3.3
