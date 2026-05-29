@@ -40,7 +40,8 @@ utils::globalVariables(c(
 #'
 #' @export
 
-iSTAY_Single <- function (data, order.q = c(1, 2), Alltime = TRUE, start_T = NULL, end_T = NULL){
+iSTAY_Single <- function (data, order.q = c(1, 2), Alltime = TRUE, start_T = NULL, end_T = NULL)
+{
   if (is.vector(data)) {
     data <- matrix(data, nrow = 1)
   }
@@ -90,10 +91,6 @@ iSTAY_Single <- function (data, order.q = c(1, 2), Alltime = TRUE, start_T = NUL
   return(result)
 }
 
-
-
-
-
 #' Calculate stability and synchrony for multiple time series.
 #'
 #' \code{iSTAY_Multiple} computes gamma, alpha, and beta stability, as well as synchrony, for multiple time-series data.
@@ -102,7 +99,7 @@ iSTAY_Single <- function (data, order.q = c(1, 2), Alltime = TRUE, start_T = NUL
 #' @param order.q A numerical vector specifying the orders of stability and synchrony. Default is c(1,2).
 #' @param equal_weights Logical. If \code{TRUE}, all time series are assigned equal weights when computing alpha and gamma stability.
 #' If \code{FALSE}, time series are weighted by their total abundance or biomass across all time points.
-#' Default is \code{TRUE}.
+#' Default is \code{FALSE}.
 #' @param Alltime Logical (\code{TRUE} or \code{FALSE}), indicating whether to use all time points in the data.
 #' @param start_T (Applicable only if \code{Alltime = FALSE}) a positive integer specifying the starting column (time point) for the analysis interval.
 #' @param end_T (Applicable only if \code{Alltime = FALSE}) a positive integer specifying the ending column (time point) for the analysis interval.
@@ -148,7 +145,7 @@ iSTAY_Single <- function (data, order.q = c(1, 2), Alltime = TRUE, start_T = NUL
 #' output_metapopulations_biomass
 #' @export
 
-iSTAY_Multiple = function (data, order.q = c(1, 2), equal_weights = TRUE, Alltime = TRUE, start_T = NULL, end_T = NULL) 
+iSTAY_Multiple = function (data, order.q = c(1, 2), equal_weights = FALSE, Alltime = TRUE, start_T = NULL, end_T = NULL) 
 {
   NA_num <- sum(is.na(data))
   if (NA_num != 0) {
@@ -313,6 +310,7 @@ iSTAY_Multiple = function (data, order.q = c(1, 2), equal_weights = TRUE, Alltim
   
   return(result)
 }
+
 #' Calculate stability and synchrony at each hierarchical level
 #'
 #' \code{iSTAY_Hier} computes gamma, alpha, and beta stability, as well as synchrony, at each hierarchical level for time series of biomass or other variables.
@@ -344,8 +342,8 @@ iSTAY_Multiple = function (data, order.q = c(1, 2), equal_weights = TRUE, Alltim
 #'
 #' @export
 
-iSTAY_Hier <- function(data, structure, order.q = c(1, 2),
-                       Alltime = TRUE, start_T = NULL, end_T = NULL) {
+iSTAY_Hier <- function(data, structure, order.q = c(1, 2), Alltime = TRUE, start_T = NULL, end_T = NULL)
+{
   
   if (Alltime == FALSE) {
     data <- data[, start_T:end_T]
@@ -633,6 +631,7 @@ iSTAY_Hier <- function(data, structure, order.q = c(1, 2),
 }
 
 
+
 #' ggplot2 extension for plotting stability and synchrony profiles.
 #'
 #' \code{ggiSTAY_qprofile} is a graphical function based on the output from the function \code{iSTAY_Single}, \code{iSTAY_Multiple} or \code{iSTAY_Hier}. It generates stability (and synchrony, if multiple time series are included) profiles that depict how stability and synchrony vary with the order q > 0.
@@ -660,19 +659,24 @@ iSTAY_Hier <- function(data, structure, order.q = c(1, 2),
 #' # See Example 1 in the iSTAY vignette for the output.
 #' 
 #' individual_plots <- do.call(rbind, Data_Jena_20_metacommunities)
+#' 
 #' output_two_plots_q <- iSTAY_Single(
 #'                data = individual_plots[which(rownames(individual_plots) 
 #'                %in% c("B1_4.B1A04", "B4_2.B4A14")),],
 #'                order.q = seq(0.1,2,0.1), Alltime = TRUE)
+#'                
 #' ggiSTAY_qprofile(output = output_two_plots_q)
 #'
 #' # Plot the stability profiles of two selected populations
 #' # See Example 3 in the iSTAY vignette for the output.
+#' 
 #' individual_populations <- do.call(rbind, Data_Jena_76_metapopulations)
+#' 
 #' output_two_populations_q <- iSTAY_Single(
 #'                data = individual_populations[which(rownames(individual_populations) 
 #'                %in% c("B1A06_B1_16.BM_Ant.odo", "B1A06_B1_16.BM_Cam.pat")),],
 #'                order.q = seq(0.1,2,0.1), Alltime = TRUE)
+#'                
 #' ggiSTAY_qprofile(output = output_two_populations_q)
 #'
 #'
@@ -682,9 +686,11 @@ iSTAY_Hier <- function(data, structure, order.q = c(1, 2),
 #' # See Example 5 in the iSTAY vignette for the output.
 #' 
 #' metacommunities <- Data_Jena_20_metacommunities
+#' 
 #' output_two_metacommunities_q <- iSTAY_Multiple(
 #'            data = metacommunities[which(names(metacommunities) %in% c("B1_1",  "B3_2"))],
 #'            order.q = seq(0.1,2,0.1), Alltime = TRUE)
+#'            
 #' ggiSTAY_qprofile(output = output_two_metacommunities_q)
 #'
 #' # Plot the gamma, alpha and beta stability profiles, 
@@ -692,9 +698,11 @@ iSTAY_Hier <- function(data, structure, order.q = c(1, 2),
 #' # See Example 7 in the iSTAY vignette for the output.
 #' 
 #' metapopulations <- Data_Jena_76_metapopulations
+#' 
 #' output_two_metapopulations_q <- iSTAY_Multiple(
 #'            data = metapopulations[which(names(metapopulations) %in% c("B1A04_B1_4", "B4A14_B4_2"))],
 #'            order.q = seq(0.1,2,0.1), Alltime = TRUE)
+#'            
 #' ggiSTAY_qprofile(output = output_two_metapopulations_q)
 #'
 #'
@@ -938,6 +946,7 @@ ggiSTAY_qprofile <- function(output){
 #' For an \code{iSTAY_Multiple} object, this function returns a figure showing the diversity (or other) variable and gamma, alpha, and beta stability, as well as synchrony.
 #'
 #' @examples
+#' 
 #' data("Data_Jena_20_metacommunities")
 #' data("Data_Jena_76_metapopulations")
 #' data("Data_Jena_462_populations")
@@ -947,8 +956,11 @@ ggiSTAY_qprofile <- function(output){
 #' # Analyze the stability of individual plots and diversity-stability 
 #' # relationship based on 76 plots
 #' # See Example 2 in the iSTAY vignette for the output.
+#' 
 #' individual_plots <- do.call(rbind, Data_Jena_20_metacommunities)
+#' 
 #' output_individual_plots_div <- iSTAY_Single(data=individual_plots, order.q=c(1,2), Alltime=TRUE)
+#' 
 #' output_individual_plots_div <- data.frame(output_individual_plots_div,
 #'                                  log2_sowndiv = log2(as.numeric(do.call(rbind,
 #'                                  strsplit(output_individual_plots_div[,1],"[._]+"))[,2])),
@@ -961,9 +973,12 @@ ggiSTAY_qprofile <- function(output){
 #' # Analyze the stability of individual populations and diversity-stability 
 #' # relationships based on 462 populations
 #' # See Example 4 in the iSTAY vignette for the output.
+#' 
 #' individual_populations <- do.call(rbind, Data_Jena_76_metapopulations)
+#' 
 #' output_individual_populations_div <- iSTAY_Single(data = individual_populations,
 #'                                          order.q=c(1,2), Alltime=TRUE)
+#'                                          
 #' output_individual_populations_div <- data.frame(output_individual_populations_div,
 #'                               log2_sowndiv = log2(as.numeric(do.call(rbind,
 #'                               strsplit(output_individual_populations_div[,1],"[._]+"))[,3])),
@@ -977,12 +992,15 @@ ggiSTAY_qprofile <- function(output){
 #' ## Multiple time series analysis
 #' # Analyze the stability and synchrony within each metacommunity
 #' # using equal weights
+#' 
 #' metacommunities <- Data_Jena_20_metacommunities
+#' 
 #' output_metacommunities_equal_div <- iSTAY_Multiple(
 #'                                      data = metacommunities,
 #'                                      order.q = c(1, 2),
 #'                                      equal_weights = TRUE,
 #'                                      Alltime = TRUE)
+#'                                      
 #' output_metacommunities_equal_div <- data.frame(
 #'                                      output_metacommunities_equal_div,
 #'                                      log2_sowndiv = log2(as.numeric(do.call(rbind,
@@ -997,11 +1015,13 @@ ggiSTAY_qprofile <- function(output){
 #'
 #' # Analyze the stability and synchrony within each metacommunity
 #' # using size/biomass weights
+#' 
 #' output_metacommunities_biomass_div <- iSTAY_Multiple(
 #'                                        data = metacommunities,
 #'                                        order.q = c(1, 2),
 #'                                        equal_weights = FALSE,
 #'                                        Alltime = TRUE)
+#'                                        
 #' output_metacommunities_biomass_div <- data.frame(
 #'                                        output_metacommunities_biomass_div,
 #'                                        log2_sowndiv = log2(as.numeric(do.call(rbind,
@@ -1016,12 +1036,15 @@ ggiSTAY_qprofile <- function(output){
 #'
 #' # Analyze the stability and synchrony within each metapopulation
 #' # using equal weights
+#' 
 #' metapopulations <- Data_Jena_76_metapopulations
+#' 
 #' output_metapopulations_equal_div <- iSTAY_Multiple(
 #'                                      data = metapopulations,
 #'                                      order.q = c(1, 2),
 #'                                      equal_weights = TRUE,
 #'                                      Alltime = TRUE)
+#'                                      
 #' output_metapopulations_equal_div <- data.frame(
 #'                                      output_metapopulations_equal_div,
 #'                                      log2_sowndiv = log2(as.numeric(do.call(rbind,
@@ -1036,11 +1059,13 @@ ggiSTAY_qprofile <- function(output){
 #'
 #' # Analyze the stability and synchrony within each metapopulation
 #' # using size/biomass weights
+#' 
 #' output_metapopulations_biomass_div <- iSTAY_Multiple(
 #'                                        data = metapopulations,
 #'                                        order.q = c(1, 2),
 #'                                        equal_weights = FALSE,
 #'                                        Alltime = TRUE)
+#'                                        
 #' output_metapopulations_biomass_div <- data.frame(
 #'                                        output_metapopulations_biomass_div,
 #'                                        log2_sowndiv = log2(as.numeric(do.call(rbind,
@@ -1667,9 +1692,6 @@ ggiSTAY_analysis <- function(output, x_variable, by_group=NULL, model="LMM"){
   return(plotout) 
 }
 
-
-
-
 # Generate Color Palette for ggplot2
 #
 # This function creates a color palette suitable for ggplot2 visualizations by evenly spacing colors in the HCL color space. The function ensures that the colors are well-distributed and visually distinct, making it ideal for categorical data where each category needs to be represented by a different color.
@@ -1681,8 +1703,11 @@ ggiSTAY_analysis <- function(output, x_variable, by_group=NULL, model="LMM"){
 # ggplotColors(5)
 #
 # # Use the generated colors in a ggplot2 chart
+
 # library(ggplot2)
+
 # df <- data.frame(x = 1:5, y = rnorm(5), group = factor(1:5))
+
 # ggplot(df, aes(x, y, color = group)) +
 #   geom_point() +
 #   scale_color_manual(values = ggplotColors(5))
@@ -1692,8 +1717,6 @@ ggplotColors <- function(g){
   h <- cumsum(c(15, rep(d,g - 1))) # Create cumulative sums to define hue values
   grDevices::hcl(h = h, c = 100, l = 65) # Convert HCL values to hexadecimal color codes
 }
-
-
 
 
 

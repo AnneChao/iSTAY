@@ -93,7 +93,7 @@ iSTAY_Single(data, order.q = c(1, 2), Alltime = TRUE, start_T = NULL, end_T = NU
 - **iSTAY_Multiple**: computes gamma, alpha, and beta stability, as well as synchrony, for multiple time-series of biomass or other relevant variables. The argument `equal_weights` controls whether all time series are assigned equal weights (`TRUE`) or weighted by their total biomass/abundance (`FALSE`).
 
 ```{r, eval=FALSE}
-iSTAY_Multiple(data, order.q = c(1, 2), equal_weights = TRUE, Alltime = TRUE, start_T = NULL, end_T = NULL)
+iSTAY_Multiple(data, order.q = c(1, 2), equal_weights = FALSE, Alltime = TRUE, start_T = NULL, end_T = NULL)
 ```
 
 - **iSTAY_Hier**: computes gamma, alpha, and beta stability, as well as synchrony, at each hierarchical level for hierarchical time series of biomass or other variables. 
