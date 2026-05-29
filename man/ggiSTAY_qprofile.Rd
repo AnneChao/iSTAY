@@ -52,29 +52,51 @@ ggiSTAY_qprofile(output = output_two_populations_q)
 
 
 ## Multiple time series analysis
-# Plot the gamma, alpha and beta stability profiles, 
-# as well as synchrony profiles for two selected metacommunities
+# Plot the gamma, alpha and beta stability profiles,
+# as well as synchrony profiles for two selected metacommunities.
+# Results are shown using both equal weights and size/biomass weights.
 # See Example 5 in the iSTAY vignette for the output.
 
 metacommunities <- Data_Jena_20_metacommunities
 
-output_two_metacommunities_q <- iSTAY_Multiple(
-           data = metacommunities[which(names(metacommunities) \%in\% c("B1_1",  "B3_2"))],
-           order.q = seq(0.1,2,0.1), Alltime = TRUE)
-           
-ggiSTAY_qprofile(output = output_two_metacommunities_q)
+output_two_metacommunities_equal_q <- iSTAY_Multiple(
+           data = metacommunities[which(names(metacommunities) \%in\% c("B1_1", "B3_2"))],
+           order.q = seq(0.1, 2, 0.1),
+           equal_weights = TRUE,
+           Alltime = TRUE)
 
-# Plot the gamma, alpha and beta stability profiles, 
-# as well as synchrony profiles of two selected metapopulations
+ggiSTAY_qprofile(output = output_two_metacommunities_equal_q)
+
+output_two_metacommunities_biomass_q <- iSTAY_Multiple(
+           data = metacommunities[which(names(metacommunities) \%in\% c("B1_1", "B3_2"))],
+           order.q = seq(0.1, 2, 0.1),
+           equal_weights = FALSE,
+           Alltime = TRUE)
+
+ggiSTAY_qprofile(output = output_two_metacommunities_biomass_q)
+
+# Plot the gamma, alpha and beta stability profiles,
+# as well as synchrony profiles of two selected metapopulations.
+# Results are shown using both equal weights and size/biomass weights.
 # See Example 7 in the iSTAY vignette for the output.
 
 metapopulations <- Data_Jena_76_metapopulations
 
-output_two_metapopulations_q <- iSTAY_Multiple(
+output_two_metapopulations_equal_q <- iSTAY_Multiple(
            data = metapopulations[which(names(metapopulations) \%in\% c("B1A04_B1_4", "B4A14_B4_2"))],
-           order.q = seq(0.1,2,0.1), Alltime = TRUE)
-           
-ggiSTAY_qprofile(output = output_two_metapopulations_q)
+           order.q = seq(0.1, 2, 0.1),
+           equal_weights = TRUE,
+           Alltime = TRUE)
+
+ggiSTAY_qprofile(output = output_two_metapopulations_equal_q)
+
+output_two_metapopulations_biomass_q <- iSTAY_Multiple(
+           data = metapopulations[which(names(metapopulations) \%in\% c("B1A04_B1_4", "B4A14_B4_2"))],
+           order.q = seq(0.1, 2, 0.1),
+           equal_weights = FALSE,
+           Alltime = TRUE)
+
+ggiSTAY_qprofile(output = output_two_metapopulations_biomass_q)
 
 
 ## Hierarchical time series analysis
