@@ -345,9 +345,13 @@ iSTAY_Multiple = function (data, order.q = c(1, 2), equal_weights = FALSE, Allti
 iSTAY_Hier <- function(data, structure, order.q = c(1, 2), Alltime = TRUE, start_T = NULL, end_T = NULL)
 {
   
+  
+  
   if (Alltime == FALSE) {
     data <- data[, start_T:end_T]
   }
+  
+ 
   
   Times <- ncol(data)
   
@@ -358,6 +362,7 @@ iSTAY_Hier <- function(data, structure, order.q = c(1, 2), Alltime = TRUE, start
   }
   
   data <- as.matrix(data)
+  data = data / rowSums(data)
   
   N <- sum(data)
   G <- apply(data, 2, sum) / N
