@@ -1380,20 +1380,21 @@ ggiSTAY_analysis <- function(output, x_variable, by_group=NULL, model="LMM"){
     
     for (qq in unique(output$Order_q)) {
       subdata <- dplyr::filter(output, Order_q == qq)
+      subdata_S <- dplyr::filter(subdata, Synchrony != 1)
       
       if (identical(model, "lm")) {
         sign_num <- 4
         MODEL_G <- stats::lm(Gamma ~ Xvariable, subdata);     sum_gamma <- summary(MODEL_G); pred_G <- stats::predict(MODEL_G, newdata = subdata)
         MODEL_A <- stats::lm(Alpha ~ Xvariable, subdata);     sum_alpha <- summary(MODEL_A); pred_A <- stats::predict(MODEL_A, newdata = subdata)
         MODEL_BA<- stats::lm(Beta  ~ Xvariable, subdata);     sum_beta_add <- summary(MODEL_BA); pred_BA <- stats::predict(MODEL_BA, newdata = subdata)
-        MODEL_S <- stats::lm(Synchrony ~ Xvariable, subdata); sum_syn <- summary(MODEL_S); pred_S <- stats::predict(MODEL_S, newdata = subdata)
+        MODEL_S <- stats::lm(Synchrony ~ Xvariable, subdata_S); sum_syn <- summary(MODEL_S); pred_S <- rep(NA_real_, nrow(subdata)); pred_S[subdata$Synchrony != 1] <- stats::predict(MODEL_S, newdata = subdata_S)
         
       } else {
         sign_num <- 5
         MODEL_G <- lmerTest::lmer(Gamma     ~ 1 + Xvariable + (1 + Xvariable | Gvariable), subdata); sum_gamma <- summary(MODEL_G); pred_G <- stats::predict(MODEL_G, newdata = subdata, re.form = NA)
         MODEL_A <- lmerTest::lmer(Alpha     ~ 1 + Xvariable + (1 + Xvariable | Gvariable), subdata); sum_alpha <- summary(MODEL_A); pred_A <- stats::predict(MODEL_A, newdata = subdata, re.form = NA)
         MODEL_BA<- lmerTest::lmer(Beta      ~ 1 + Xvariable + (1 + Xvariable | Gvariable), subdata); sum_beta_add <- summary(MODEL_BA); pred_BA <- stats::predict(MODEL_BA, newdata = subdata, re.form = NA)
-        MODEL_S <- lmerTest::lmer(Synchrony ~ 1 + Xvariable + (1 + Xvariable | Gvariable), subdata); sum_syn <- summary(MODEL_S); pred_S <- stats::predict(MODEL_S, newdata = subdata, re.form = NA)
+        MODEL_S <- lmerTest::lmer(Synchrony ~ 1 + Xvariable + (1 + Xvariable | Gvariable), subdata_S); sum_syn <- summary(MODEL_S); pred_S <- rep(NA_real_, nrow(subdata)); pred_S[subdata$Synchrony != 1] <- stats::predict(MODEL_S, newdata = subdata_S, re.form = NA)
         
         ran <- c()
         for (bb in rownames(stats::coef(MODEL_G)$Gvariable)) {
@@ -1489,6 +1490,8 @@ ggiSTAY_analysis <- function(output, x_variable, by_group=NULL, model="LMM"){
       Xvariable = rep(plotdata$Xvariable, 4)
     )
     
+
+
     if ("Weight" %in% colnames(plotdata)) {
       plotdata_Stab$Weight <- rep(plotdata$Weight, 4)
       plotdata_Stab$Weight <- factor(
@@ -1504,6 +1507,12 @@ ggiSTAY_analysis <- function(output, x_variable, by_group=NULL, model="LMM"){
       plotdata$Gvariable <- as.factor(plotdata$Gvariable) 
       
     } 
+    
+    plotdata_Stab <- dplyr::filter(
+      plotdata_Stab,
+      !(type == "Synchrony" & Stability == 1)
+    )
+    
     
     plotdata_Stab$sign <- factor(plotdata_Stab$sign, 
                                  levels=c("significant", "non-significant")

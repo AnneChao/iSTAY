@@ -54,7 +54,7 @@ Specifically, `iSTAY` features the following measures for three types of analyse
 
 If you publish your work based on the results from the `iSTAY` package, you should make references to the following methodology paper and the `iSTAY` package.
 
-<li> Chao, A., Colwell, R. K., Shia J., Thorn, S., Yang, M.-Y., Mitesser, O., et al. (2025) A continuum of information-based temporal stability measures and their decomposition across hierarchical level. *BioRxiv* [doi:10.1101/2025.08.20.671203](https://doi.org/10.1101/2025.08.20.671203)
+<li> Chao, A., Colwell, R. K., Shia, J., Thorn, S., Yang, M.-Y., Mitesser, O., et al. (2025) A continuum of information-based temporal stability measures and their decomposition across hierarchical level. *BioRxiv* [doi:10.1101/2025.08.20.671203](https://doi.org/10.1101/2025.08.20.671203)
 
 <li> Chao, A., Lee, Y.-T., Lin, K.-L., and Chuang, P.-Y. (2026). `iSTAY` package: information-based stability and synchrony measures. Available from CRAN. </li>
 
@@ -120,14 +120,14 @@ The data input format for each function is detailed in the manual.
 
 - **`Data_Jena_462_populations`**: All plots in the Jena Experiment were arranged into 4 blocks, each containing 18–20 plots. Plots were sown along a gradient of 1, 2, 4, 8, or 16 species, comprising a total of 462 populations. The biomass of each species sown in a plot was recorded annually from 2003 to 2024, except in 2004. This dataset includes the 21-year biomass time series of all 462 populations across 76 plots.
 
-- **`Data_Jena_hierarchical_structure`**:  The entire Jena dataset forms a four-level hierarchy: Level 1: population or species, Level 2: community, Level 3: block, and level 4: overall data. This dataset describes the four-level structure. Each row corresponds to a population identifier (matching the same row Data_Jena_462_populations) and records the names of the block, plot and species to which that population belongs.
+- **`Data_Jena_hierarchical_structure`**:  The entire Jena dataset forms a four-level hierarchy: Level 1: population or species, Level 2: community, Level 3: block, and Level 4: overall data. This dataset describes the four-level structure. Each row corresponds to a population identifier (matching the same row in Data_Jena_462_populations) and records the names of the block, plot and species to which that population belongs.
 
 - **`Data_Jena_20_metacommunities`**: All 76 plots are grouped into 20 sets based on their block identifiers and species richness levels. Each set is treated as a metacommunity, comprising three or four plots (communities). All plots within a metacommunity share the same number of species but differ in species composition. This dataset includes the 22-year (2003 to 2024) biomass time series of all constituent plots within each metacommunity. 
 
 - **`Data_Jena_76_metapopulations`**: The biomass data for all species sown within each plot are used to form 76 metapopulations. Because the number of species sown per plot ranges from 1 to 16, the number of populations within the 76 plots also ranges from 1 to 16. Each metapopulation dataset therefore includes all population-level 21-year biomass records for its constituent species.
 
 
-## Data Convertion
+## Data Conversion
 
 #### Data for 76 individual plots
 
@@ -589,7 +589,7 @@ ggiSTAY_qprofile(output = output_two_metapopulations_biomass_q)
 
 <br><br>
 
-## Exammple 8: Assessing the relationships between diversity and gamma, alpha, and beta stability, as well as synchrony, based on 76 metapopulations
+## Example 8: Assessing the relationships between diversity and gamma, alpha, and beta stability, as well as synchrony, based on 76 metapopulations
 
 Run the following code to compute the gamma, alpha, and beta stability, as well as synchrony values, at orders q = 1 and q = 2 for all 76 metapopulations. The corresponding diversity (log2_sowndiv) and block identifiers are also included. The block identifier is used to set the `by_group` argument; it colors points by group and serves as the random effect for both intercept and slope when the Linear Mixed Model is selected in `ggiSTAY_analysis`. Only the first ten rows of the output are displayed.
 
@@ -704,7 +704,7 @@ ggiSTAY_analysis(output = output_metapopulations_biomass_div,
 
 ## Example 9: Plotting stability and synchrony profiles at each hierarchical level 
 
-Run the following code to compute the gamma, alpha, and beta stability, as well as the synchrony, of order q = 0.1 to q = 2 in increments 0.1 for each hierarchical level.  The table includes the following information: Hier_level  (hierarchical level; Level 1: population, Level 2: community, Level 3: block, and level 4: overall data), Order_q, Gamma, Alpha, Beta Stability, and Synchrony values. Only the first ten rows of the output are displayed.
+Run the following code to compute the gamma, alpha, and beta stability, as well as the synchrony, of order q = 0.1 to q = 2 in increments 0.1 for each hierarchical level.  The table includes the following information: Hier_level  (hierarchical level; Level 1: population, Level 2: community, Level 3: block, and Level 4: overall data), Order_q, Gamma, Alpha, Beta Stability, and Synchrony values. Only the first ten rows of the output are displayed.
 
 ```{r, eval=F}
 data("Data_Jena_462_populations")
@@ -742,10 +742,10 @@ hierplot[[2]]
 
 ## References
 
-Chao, A., Colwell, R. K., Shia J., Thorn, S., Yang, M.-Y., Mitesser, O., et al. (2025)
+Chao, A., Colwell, R. K., Shia, J., Thorn, S., Yang, M.-Y., Mitesser, O., et al. (2025)
 A continuum of information-based temporal stability measures and their decomposition across hierarchical level. *BioRxiv* [doi:10.1101/2025.08.20.671203](https://doi.org/10.1101/2025.08.20.671203)
 
-Roscher C. Schumacher, J., Baade, J., Wilcke, W., Gleixner, G., Weisser, W. W. et al. (2004). The role of biodiversity for element cycling and trophic interactions: an experimental approach in a grassland community. Basic and Applied Ecology, 5, 107–121.
+Roscher, C. Schumacher, J., Baade, J., Wilcke, W., Gleixner, G., Weisser, W. W. et al. (2004). The role of biodiversity for element cycling and trophic interactions: an experimental approach in a grassland community. Basic and Applied Ecology, 5, 107–121.
 
 Wagg, C., Roscher, C., Weigelt, A., Vogel, A., Ebeling, A., De Luca, E. et al. (2022) Biodiversity–stability relationships strengthen over time in a long-term grassland experiment. Nature Communications, 13, 7752.  
 
