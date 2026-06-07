@@ -3,7 +3,7 @@ Type: Package
 Title: Information-Based Stability and Synchrony Measures
 Version: 1.1.0
 Date: 2026-05-29
-Author: Anne Chao [aut, cre], Yu-Ti Lee [aut], Keng-Lei Lin [aut], Po-Yen Chuang[aut]
+Author: Anne Chao [aut, cre], Yu-Ti Lee [aut], Keng-Lei Lin [aut], Po-Yen Chuang [aut]
 Maintainer: Anne Chao <chao@stat.nthu.edu.tw>
 Authors@R:
   c(person("Anne",
@@ -23,7 +23,7 @@ Authors@R:
            role = "aut",
            email = "zerind0970983096@gmail.com")
   )
-Description: Provides functions to to compute a continuum of information-based measures 
+Description: Provides functions to compute a continuum of information-based measures 
  for quantifying the temporal stability of populations, communities, and ecosystems, 
  as well as their associated synchrony, based on species (or species assemblage)
  biomass or other key variables. When biodiversity data are available, the package

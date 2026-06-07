@@ -10,7 +10,7 @@ ggiSTAY_qprofile(output)
 \item{output}{the output obtained from \code{iSTAY_Single}, \code{iSTAY_Multiple} or \code{iSTAY_Hier}.}
 }
 \value{
-For an \code{iSTAY_Single} object, this function return a figure showing the stability profile.\cr
+For an \code{iSTAY_Single} object, this function returns a figure showing the stability profile.\cr
 
 For an \code{iSTAY_Multiple} object, it returns a figure displaying the profiles for gamma, alpha, and beta stability, as well as synchrony.\cr
 

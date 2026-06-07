@@ -7,7 +7,7 @@
 ggiSTAY_analysis(output, x_variable, by_group = NULL, model = "LMM")
 }
 \arguments{
-\item{output}{The output obtained from \code{iSTAY_Single} or \code{iSTAY_Multiple}. It must include (or be combined with) a column corresponding to the variable specified in \code{x_variable}. If \code{by_group} is not \code{NULL},  must also include a column corresponding the variable specified in \code{by_group}.}
+\item{output}{The output obtained from \code{iSTAY_Single} or \code{iSTAY_Multiple}. It must include (or be combined with) a column corresponding to the variable specified in \code{x_variable}. If \code{by_group} is not \code{NULL},  must also include a column corresponding to the variable specified in \code{by_group}.}
 
 \item{x_variable}{The name of the column representing the diversity (or other) variable to be used as the x-axis in the plot.}
 

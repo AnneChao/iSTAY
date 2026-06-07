@@ -28,7 +28,7 @@ iSTAY_Hier(
 }
 \value{
 a data frame with the following columns: \cr
- Hier_level: hierarchical level (e.g. Level 1: population, Level 2: community, Level 3: block, and level 4: overall data) \cr
+ Hier_level: hierarchical level (e.g. Level 1: population, Level 2: community, Level 3: block, and Level 4: overall data) \cr
  Order_q: order of stability or synchrony \cr
  Gamma, Alpha, Beta: stability measures of order q \cr
  Synchrony: synchrony measure of order q

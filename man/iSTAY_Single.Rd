@@ -15,7 +15,7 @@ iSTAY_Single(
 \arguments{
 \item{data}{A \code{vector} of time series data, or a \code{data.frame} with sampling units as rows and time points as columns.}
 
-\item{order.q}{a numerical vector specifying the orders of stability. Default is c(1,2).}
+\item{order.q}{A numerical vector specifying the orders of stability. Default is c(1,2).}
 
 \item{Alltime}{Logical (\code{TRUE} or \code{FALSE}), indicating whether to use all time points in the data.}
 

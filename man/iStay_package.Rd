@@ -32,9 +32,9 @@ This package contains five main functions: \cr
 }
 
 \references{
-Chao, A., Colwell, R. K., Shia J., Thorn, S., Yang, M.-Y., Mitesser, O., et al. (2025) A continuum of information-based temporal stability measures and their decomposition across hierarchical level. BioRxiv < https://doi.org/10.1101/2025.08.20.671203>\cr\cr
+Chao, A., Colwell, R. K., Shia, J., Thorn, S., Yang, M.-Y., Mitesser, O., et al. (2025) A continuum of information-based temporal stability measures and their decomposition across hierarchical levels. BioRxiv < https://doi.org/10.1101/2025.08.20.671203>\cr\cr
 
-Roscher C. Schumacher, J., Baade, J., Wilcke, W., Gleixner, G., Weisser, W. W. et al. (2004). The role of biodiversity for element cycling and trophic interactions: an experimental approach in a grassland community. Basic and Applied Ecology, 5, 107–121.\cr\cr
+Roscher, C. Schumacher, J., Baade, J., Wilcke, W., Gleixner, G., Weisser, W. W. et al. (2004). The role of biodiversity for element cycling and trophic interactions: an experimental approach in a grassland community. Basic and Applied Ecology, 5, 107–121.\cr\cr
 
 Wagg, C., Roscher, C., Weigelt, A., Vogel, A., Ebeling, A., De Luca, E. et al. (2022) Biodiversity–stability relationships strengthen over time in a long-term grassland experiment. Nature Communications, 13, 7752.\cr\cr
 

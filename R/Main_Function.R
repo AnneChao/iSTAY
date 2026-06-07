@@ -10,7 +10,7 @@ utils::globalVariables(c(
 #' \code{iSTAY_Single} computes the stability of order q for a single time series.
 #'
 #' @param data A \code{vector} of time series data, or a \code{data.frame} with sampling units as rows and time points as columns.
-#' @param order.q a numerical vector specifying the orders of stability. Default is c(1,2).
+#' @param order.q A numerical vector specifying the orders of stability. Default is c(1,2).
 #' @param Alltime Logical (\code{TRUE} or \code{FALSE}), indicating whether to use all time points in the data.
 #' @param start_T (Applicable only if \code{Alltime = FALSE}) a positive integer specifying the starting column (time point) for the analysis interval.
 #' @param end_T (Applicable only if \code{Alltime = FALSE}) a positive integer specifying the ending column (time point) for the analysis interval.
@@ -325,7 +325,7 @@ iSTAY_Multiple = function (data, order.q = c(1, 2), equal_weights = FALSE, Allti
 #' @import dplyr
 #'
 #' @return a data frame with the following columns: \cr
-#'  Hier_level: hierarchical level (e.g. Level 1: population, Level 2: community, Level 3: block, and level 4: overall data) \cr
+#'  Hier_level: hierarchical level (e.g. Level 1: population, Level 2: community, Level 3: block, and Level 4: overall data) \cr
 #'  Order_q: order of stability or synchrony \cr
 #'  Gamma, Alpha, Beta: stability measures of order q \cr
 #'  Synchrony: synchrony measure of order q
@@ -646,7 +646,7 @@ iSTAY_Hier <- function(data, structure, order.q = c(1, 2), Alltime = TRUE, start
 #' @import ggpubr
 #'
 #'
-#' @return For an \code{iSTAY_Single} object, this function return a figure showing the stability profile.\cr
+#' @return For an \code{iSTAY_Single} object, this function returns a figure showing the stability profile.\cr
 #'
 #' For an \code{iSTAY_Multiple} object, it returns a figure displaying the profiles for gamma, alpha, and beta stability, as well as synchrony.\cr
 #'
@@ -957,7 +957,7 @@ ggiSTAY_qprofile <- function(output){
 #'
 #' \code{ggiSTAY_analysis} is a graphical function based on the output from the functions \code{iSTAY_Single} or \code{iSTAY_Multiple}. It generates plots showing the relationships between stability (and synchrony if multiple time series are included) and an additional variable, such as diversity or another relevant factor.
 #'
-#' @param output The output obtained from \code{iSTAY_Single} or \code{iSTAY_Multiple}. It must include (or be combined with) a column corresponding to the variable specified in \code{x_variable}. If \code{by_group} is not \code{NULL},  must also include a column corresponding the variable specified in \code{by_group}.
+#' @param output The output obtained from \code{iSTAY_Single} or \code{iSTAY_Multiple}. It must include (or be combined with) a column corresponding to the variable specified in \code{x_variable}. If \code{by_group} is not \code{NULL},  must also include a column corresponding to the variable specified in \code{by_group}.
 #' @param x_variable The name of the column representing the diversity (or other) variable to be used as the x-axis in the plot.
 #' @param by_group The name of the column representing a categorical variable used to color points by group. The argument is required if \code{model = "LMM"},  as the model uses it as random effect for both intercept and slope. Default is \code{NULL}.
 #' @param model Specifies the fitting model. Use \code{model = "lm"} for a linear model; or \code{model = "LMM"} for a linear mixed model with random effects for both intercept and slope. Default is \code{model = "LMM"}.
