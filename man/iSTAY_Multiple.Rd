@@ -39,6 +39,23 @@ a data frame with the following columns: \cr
 \code{iSTAY_Multiple} computes gamma, alpha, and beta stability, as well as synchrony, for multiple time-series data.
 }
 \examples{
+# Stability and synchrony of communities using equal weights
+data("Data_Jena_76_communities")
+communities <- Data_Jena_76_communities
+output_communities_equal <- iSTAY_Multiple(data = communities,
+                                          order.q = c(1, 2),
+                                          equal_weights = TRUE,
+                                          Alltime = TRUE)
+output_communities_equal
+
+# Stability and synchrony of communities using size/biomass weights
+output_communities_biomass <- iSTAY_Multiple(data = communities,
+                                            order.q = c(1, 2),
+                                            equal_weights = FALSE,
+                                            Alltime = TRUE)
+output_communities_biomass
+
+
 # Stability and synchrony of metacommunities using equal weights
 data("Data_Jena_20_metacommunities")
 metacommunities <- Data_Jena_20_metacommunities
@@ -55,19 +72,5 @@ output_metacommunities_biomass <- iSTAY_Multiple(data = metacommunities,
                                                 Alltime = TRUE)
 output_metacommunities_biomass
 
-# Stability and synchrony of metapopulations using equal weights
-data("Data_Jena_76_metapopulations")
-metapopulations <- Data_Jena_76_metapopulations
-output_metapopulations_equal <- iSTAY_Multiple(data = metapopulations,
-                                              order.q = c(1, 2),
-                                              equal_weights = TRUE,
-                                              Alltime = TRUE)
-output_metapopulations_equal
 
-# Stability and synchrony of metapopulations using size/biomass weights
-output_metapopulations_biomass <- iSTAY_Multiple(data = metapopulations,
-                                                order.q = c(1, 2),
-                                                equal_weights = FALSE,
-                                                Alltime = TRUE)
-output_metapopulations_biomass
 }

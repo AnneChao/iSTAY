@@ -21,7 +21,7 @@ For an \code{iSTAY_Hier} object, it returns a figure displaying the profiles for
 }
 \examples{
 data("Data_Jena_20_metacommunities")
-data("Data_Jena_76_metapopulations")
+data("Data_Jena_76_communities")
 data("Data_Jena_462_populations")
 data("Data_Jena_hierarchical_structure")
 
@@ -41,7 +41,7 @@ ggiSTAY_qprofile(output = output_two_plots_q)
 # Plot the stability profiles of two selected populations
 # See Example 3 in the iSTAY vignette for the output.
 
-individual_populations <- do.call(rbind, Data_Jena_76_metapopulations)
+individual_populations <- do.call(rbind, Data_Jena_76_communities)
 
 output_two_populations_q <- iSTAY_Single(
                data = individual_populations[which(rownames(individual_populations) 
@@ -53,9 +53,32 @@ ggiSTAY_qprofile(output = output_two_populations_q)
 
 ## Multiple time series analysis
 # Plot the gamma, alpha and beta stability profiles,
-# as well as synchrony profiles for two selected metacommunities.
+# as well as synchrony profiles of two selected communities.
 # Results are shown using both equal weights and size/biomass weights.
 # See Example 5 in the iSTAY vignette for the output.
+
+communities <- Data_Jena_76_communities
+
+output_two_communities_equal_q <- iSTAY_Multiple(
+           data = communities[which(names(communities) \%in\% c("B1A04_B1_4", "B4A14_B4_2"))],
+           order.q = seq(0.1, 2, 0.1),
+           equal_weights = TRUE,
+           Alltime = TRUE)
+
+ggiSTAY_qprofile(output = output_two_communities_equal_q)
+
+output_two_communities_biomass_q <- iSTAY_Multiple(
+           data = communities[which(names(communities) \%in\% c("B1A04_B1_4", "B4A14_B4_2"))],
+           order.q = seq(0.1, 2, 0.1),
+           equal_weights = FALSE,
+           Alltime = TRUE)
+
+ggiSTAY_qprofile(output = output_two_communities_biomass_q)
+
+# Plot the gamma, alpha and beta stability profiles,
+# as well as synchrony profiles for two selected metacommunities.
+# Results are shown using both equal weights and size/biomass weights.
+# See Example 7 in the iSTAY vignette for the output.
 
 metacommunities <- Data_Jena_20_metacommunities
 
@@ -74,30 +97,6 @@ output_two_metacommunities_biomass_q <- iSTAY_Multiple(
            Alltime = TRUE)
 
 ggiSTAY_qprofile(output = output_two_metacommunities_biomass_q)
-
-# Plot the gamma, alpha and beta stability profiles,
-# as well as synchrony profiles of two selected metapopulations.
-# Results are shown using both equal weights and size/biomass weights.
-# See Example 7 in the iSTAY vignette for the output.
-
-metapopulations <- Data_Jena_76_metapopulations
-
-output_two_metapopulations_equal_q <- iSTAY_Multiple(
-           data = metapopulations[which(names(metapopulations) \%in\% c("B1A04_B1_4", "B4A14_B4_2"))],
-           order.q = seq(0.1, 2, 0.1),
-           equal_weights = TRUE,
-           Alltime = TRUE)
-
-ggiSTAY_qprofile(output = output_two_metapopulations_equal_q)
-
-output_two_metapopulations_biomass_q <- iSTAY_Multiple(
-           data = metapopulations[which(names(metapopulations) \%in\% c("B1A04_B1_4", "B4A14_B4_2"))],
-           order.q = seq(0.1, 2, 0.1),
-           equal_weights = FALSE,
-           Alltime = TRUE)
-
-ggiSTAY_qprofile(output = output_two_metapopulations_biomass_q)
-
 
 ## Hierarchical time series analysis
 # See Example 9 in the iSTAY vignette for the output.

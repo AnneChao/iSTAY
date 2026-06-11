@@ -41,8 +41,8 @@ output_individual_plots <- iSTAY_Single(data = individual_plots,
 output_individual_plots
 
 # Compute the stability of individual populations
-data("Data_Jena_76_metapopulations")
-individual_populations <- do.call(rbind, Data_Jena_76_metapopulations)
+data("Data_Jena_76_communities")
+individual_populations <- do.call(rbind, Data_Jena_76_communities)
 output_individual_populations <- iSTAY_Single(data = individual_populations, 
                                               order.q = c(1,2), Alltime = TRUE)
 output_individual_populations
