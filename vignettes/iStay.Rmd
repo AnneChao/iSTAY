@@ -49,7 +49,7 @@ Specifically, `iSTAY` features the following measures and analyses:
 
 (2)	<u>Multiple time series.</u> For multiple time series (or for each set of time series within a collection), `iSTAY` computes four measures: gamma, alpha, and beta stability, together with synchrony. The package also displays the corresponding stability and synchrony profiles. Two weighting schemes are implemented: biomass-weighting (analogous to size-weighting in diversity analysis) and equal-weighting. When biodiversity data are available, `iSTAY` further assesses diversity–stability and diversity–synchrony relationships. 
 
-(3)	<u>Hierarchical time series.</u> For hierarchical time series, `iSTAY` computes gamma, alpha, and beta stability, together with synchrony at each hierarchical level and provides the corresponding stability and synchrony profiles. Currently, Only the equal-weighting scheme is implemented for hierarchical analyses.  
+(3)	<u>Hierarchical time series.</u> For hierarchical time series, `iSTAY` computes gamma, alpha, and beta stability, together with synchrony at each hierarchical level and provides the corresponding stability and synchrony profiles. Currently, only the equal-weighting scheme is implemented for hierarchical analyses.  
 
 
 ## How to cite
@@ -71,7 +71,7 @@ The `iSTAY` package can be installed either from CRAN or from the GitHub reposit
 
 ```{r, eval = FALSE, echo = TRUE}
 ## Install iSTAY package from CRAN
-# Install.packages("iSTAY")  
+# install.packages("iSTAY")  
 
 ## Install the latest development version from GitHub
 install.packages('devtools')
@@ -497,7 +497,7 @@ head(cbind(output_communities_biomass_div[, 1:2],
 ```
 
 ```{r, echo=FALSE}
-output__biomass_div <- iSTAY_Multiple(
+output_communities_biomass_div <- iSTAY_Multiple(
   data = communities,
   order.q = c(1, 2),
   equal_weights = FALSE,
