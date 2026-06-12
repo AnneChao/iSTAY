@@ -14,7 +14,7 @@ Specifically, iSTAY provides the  following measures for three types of analyses
 
 (2) \strong{Multiple time series}: computes four measures--gamma, alpha, and beta stability, as well as synchrony--and displays the corresponding profiles for multiple time series (or for each set of time series within a collection). When biodiversity data are available, \code{iSTAY} also assesses the diversity–stability and diversity–synchrony relationships.
 
-(3) \strong{Hierarchical Series}: computes four measures--gamma, alpha, and beta stability, as well as synchrony--for each hierarchical level, and provides the corresponding stability and synchrony profiles.\cr
+(3) \strong{Hierarchical time series}: computes four measures--gamma, alpha, and beta stability, as well as synchrony--for each hierarchical level, and provides the corresponding stability and synchrony profiles.\cr
 
 
 This package contains five main functions: \cr
