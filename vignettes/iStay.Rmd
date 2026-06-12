@@ -67,7 +67,7 @@ Users publishing results obtained with the `iSTAY` package are requested to cite
 
 ## Installing and loading `iSTAY`:
 
-The `iSTAY` package can be installed either from CRAN or from the GitHub repository at [iSTAY_github](https://github.com/AnneChao/iSTAY). For first-time users, the visualization package (`ggplot2`) should be also installed and loaded.
+The `iSTAY` package can be installed either from CRAN or from the GitHub repository at [iSTAY_github](https://github.com/AnneChao/iSTAY). For first-time users, the visualization package (`ggplot2`) should also be installed and loaded.
 
 ```{r, eval = FALSE, echo = TRUE}
 ## Install iSTAY package from CRAN
@@ -121,7 +121,7 @@ The required input-data format for each function is described in detail in the p
 
 ## Datasets Provided with the 'iSTAY' package
 
-- **`Data_Jena_462_populations`**: The Jena Experiment consists of 76 plots arranged into 4 blocks, each containing 18–20 plots. Plots were sown along a gradient of 1, 2, 4, 8, or 16 species, resulting in a total of 462 populations. The biomass of each species in each plot was recorded annually from 2003 to 2024, except in 2004. This dataset contains the 21-year biomass time series for  all 462 populations across 76 plots.
+- **`Data_Jena_462_populations`**: The Jena Experiment consists of 76 plots arranged into 4 blocks, each containing 18–20 plots. Plots were sown along a gradient of 1, 2, 4, 8, or 16 species, resulting in a total of 462 populations. The biomass of each species in each plot was recorded annually from 2003 to 2024, except in 2004. This dataset contains the 21-year biomass time series for all 462 populations across 76 plots.
 
 - **`Data_Jena_hierarchical_structure`**:  The complete entire Jena dataset forms a four-level hierarchy: Level 1 (population or species), Level 2 (community or plot), Level 3 (block), and Level 4 (overall dataset). This dataset describes the four-level hierarchical structure. Each row corresponds to a population identifier (matching the corresponding row in `Data_Jena_462_populations`) and records the block, plot, and species to which that population belongs.
 
@@ -133,7 +133,7 @@ The required input-data format for each function is described in detail in the p
 ## Data Conversion
 
 #### Single metacommunity dataset
-The following code extracts the records of the first metacommunity, `B1_1`, which consists of three communities (plots), `B1A08`, `B1A15`, and `B1A18`) located in Block 1, each sown with one single species. For brevity, only the first five columns of the resulting dataset are displayed.
+The following code extracts the records of the first metacommunity, `B1_1`, which consists of three communities (plots), `B1A08`, `B1A15`, and `B1A18` located in Block 1, each sown with one single species. For brevity, only the first five columns of the resulting dataset are displayed.
 
 ```{r, eval=F}
 data("Data_Jena_20_metacommunities")
@@ -253,7 +253,7 @@ ggiSTAY_qprofile(output = output_two_plots_q)
 
 ## Example 2: Assessing diversity-stability relationships based on 76 individual plots  
 
-Run the following code to compute stability values of orders q = 1 and q = 2 for all 76 individual plots, and to attach the corresponding diversity (`log2_sowndiv`) and block identifiers. The block identifier is used to set the `by_group` argument; it colors points by group and serves as the random effect for both intercept and slope when the linear mixed Model is selected in `ggiSTAY_analysis`. The first ten rows of the resulting output are displayed below.
+Run the following code to compute stability values of orders q = 1 and q = 2 for all 76 individual plots, and to attach the corresponding diversity (`log2_sowndiv`) and block identifiers. The block identifier is used to set the `by_group` argument; it colors points by group and serves as the random effect for both intercept and slope when the linear mixed model is selected in `ggiSTAY_analysis`. The first ten rows of the resulting output are displayed below.
 
 ```{r, eval=FALSE}
 output_individual_plots_div <- iSTAY_Single(data = individual_plots, order.q = c(1,2), Alltime = TRUE)
@@ -530,7 +530,7 @@ ggiSTAY_analysis(output = output_communities_biomass_div,
 
 ## Example 7: Comparing gamma, alpha, and beta stability profiles, and synchrony profiles for two selected metacommunities
 
-Run the following code to compute gamma, alpha, and beta stability, as well as synchrony values for orders q = 0.1 to q = 2.0 in increments 0.2 for two selected metacommunities, `B1_1` and `B3_2`). Both equal-weighted and biomass-weighted analyses are presented. For each analysis, only the first 10 rows of the resulting output are displayed.
+Run the following code to compute gamma, alpha, and beta stability, as well as synchrony values for orders q = 0.1 to q = 2.0 in increments 0.2 for two selected metacommunities, `B1_1` and `B3_2`. Both equal-weighted and biomass-weighted analyses are presented. For each analysis, only the first 10 rows of the resulting output are displayed.
 
 ### Equal-weighted analysis
 
