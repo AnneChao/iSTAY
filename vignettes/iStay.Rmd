@@ -127,7 +127,7 @@ The required input-data format for each function is described in detail in the p
 
 - **`Data_Jena_20_metacommunities`**: All 76 plots are grouped into 20 metacommunities according to block identity and species-richness level. Each metacommunity consists of three or four plots (communities). All plots within a metacommunity have the same species richness but differ in species composition. This dataset includes the 22-year (2003 to 2024) biomass time series for constituent communities within each metacommunity. 
 
-- **`Data_Jena_76_communities`**: The biomass data for all species sown within each plot are used to form 76 community datasets. Because the number of species sown per plot ranges from 1 to 16, the number of populations within a community also ranges from 1 to 16. Each community dataset contains the 21-year biomass time series for all constituent populations.
+- **`Data_Jena_76_community_populations`**: The biomass data for all species sown within each plot are used to form 76 community datasets. Because the number of species sown per plot ranges from 1 to 16, the number of populations within a community also ranges from 1 to 16. Each community dataset contains the 21-year biomass time series for all constituent populations.
 
 
 ## Data Conversion
@@ -167,14 +167,14 @@ head(round(individual_plots[,1:5],2), 10)
 The following code extracts the records for the first community (plot), `B1A01_B1_16`, corresponding to B1A01. This community consists of 16 populations (species). Only the first 10 populations and the first five columns of the resulting dataset are displayed.
 
 ```{r, eval=F}
-data("Data_Jena_76_communities")
-communities <- Data_Jena_76_communities
+data("Data_Jena_76_community_populations")
+communities <- Data_Jena_76_community_populations
 head(round(communities[[1]][,1:5],2), 10)
 ```
 
 ```{r, echo=F}
-data("Data_Jena_76_communities")
-communities <- Data_Jena_76_communities
+data("Data_Jena_76_community_populations")
+communities <- Data_Jena_76_community_populations
 head(round(communities[[1]][,1:5],2), 10)
 ```
 
@@ -333,7 +333,7 @@ Run the following code to compute gamma, alpha and beta stability, together with
 ### Equal-weighted analysis
 
 ```{r, eval=F}
-communities <- Data_Jena_76_communities
+communities <- Data_Jena_76_community_populations
 output_two_communities_equal_q <- iSTAY_Multiple(
   data = communities[which(names(communities) %in% c("B1A04_B1_4", "B4A14_B4_2"))],
   order.q = seq(0.1, 2, 0.1),
@@ -344,7 +344,7 @@ head(output_two_communities_equal_q, 10)
 ```
 
 ```{r, echo=F}
-communities <- Data_Jena_76_communities
+communities <- Data_Jena_76_community_populations
 output_two_communities_equal_q <- iSTAY_Multiple(
   data = communities[which(names(communities) %in% c("B1A04_B1_4", "B4A14_B4_2"))],
   order.q = seq(0.1, 2, 0.1),

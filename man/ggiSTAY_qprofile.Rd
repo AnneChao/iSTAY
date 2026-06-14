@@ -21,7 +21,7 @@ For an \code{iSTAY_Hier} object, it returns a set of plots displaying the profil
 }
 \examples{
 data("Data_Jena_20_metacommunities")
-data("Data_Jena_76_communities")
+data("Data_Jena_76_community_populations")
 data("Data_Jena_462_populations")
 data("Data_Jena_hierarchical_structure")
 
@@ -57,7 +57,7 @@ ggiSTAY_qprofile(output = output_two_populations_q)
 # Results are shown under both the equal-weighting and biomass/size weighting schemes.
 # See Example 5 in the iSTAY vignette for the output.
 
-communities <- Data_Jena_76_communities
+communities <- Data_Jena_76_community_populations
 
 output_two_communities_equal_q <- iSTAY_Multiple(
            data = communities[which(names(communities) \%in\% c("B1A04_B1_4", "B4A14_B4_2"))],

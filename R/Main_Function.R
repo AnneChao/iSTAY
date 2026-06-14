@@ -93,7 +93,7 @@ iSTAY_Single <- function (data, order.q = c(1, 2), Alltime = TRUE, start_T = NUL
 
 #' Calculate stability and synchrony for multiple time series.
 #'
-#' \code{iSTAY_Multiple} computes gamma, alpha, and beta stability, as well as synchrony, for multiple time-series data. Two weighting schemes are implemented: biomass-weighting (analogous to size-weighting in diversity analysis) and equal-weighting.
+#' \code{iSTAY_Multiple} computes gamma, alpha, and beta stability, together with synchrony, for multiple time-series. Two weighting schemes are implemented: biomass-weighting (analogous to size-weighting in diversity analysis) and equal-weighting.
 #'
 #' @param data A \code{data.frame} containing multiple time series data, with sampling units as rows and time points as columns, or a \code{list} of \code{data.frames} with each data frame representing multiple time series.
 #' @param order.q A numerical vector specifying the orders of stability and synchrony. Default is c(1,2).

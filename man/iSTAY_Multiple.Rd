@@ -38,8 +38,8 @@ a data frame with the following columns: \cr
 }
 \examples{
 # Computing gamma, alpha, and beta stability together with synchrony for 76 individual plots under equal-weighting
-data("Data_Jena_76_communities")
-communities <- Data_Jena_76_communities
+data("Data_Jena_76_community_populations")
+communities <- Data_Jena_76_community_populations
 output_communities_equal <- iSTAY_Multiple(data = communities,
                                           order.q = c(1, 2),
                                           equal_weights = TRUE,

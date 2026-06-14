@@ -26,7 +26,7 @@ For an \code{iSTAY_Multiple}  object, this function returns a set of plots showi
 \examples{
 
 data("Data_Jena_20_metacommunities")
-data("Data_Jena_76_communities")
+data("Data_Jena_76_community_populations")
 data("Data_Jena_462_populations")
 data("Data_Jena_hierarchical_structure")
 
@@ -71,7 +71,7 @@ ggiSTAY_analysis(output = output_individual_populations_div, x_variable = "log2_
 
 # Under the equal-weighting scheme
 
-communities <- Data_Jena_76_communities
+communities <- Data_Jena_76_community_populations
 
 output_communities_equal_div <- iSTAY_Multiple(
                                      data = communities,
