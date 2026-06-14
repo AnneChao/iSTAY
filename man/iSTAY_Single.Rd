@@ -35,8 +35,8 @@ Stability: stability measures of order q
 \examples{
 # Computing stability of an individual metacommunity
 data("Data_Jena_20_metacommunities")
-individual_communities <- do.call(rbind, Data_Jena_20_metacommunities)
-output_individual_communities <- iSTAY_Single(data = individual_metacommunities, 
+individual_plots <- do.call(rbind, Data_Jena_20_metacommunities)
+output_individual_plots <- iSTAY_Single(data = individual_plots, 
                                         order.q=c(1,2), Alltime = TRUE)
 output_individual_plots
 

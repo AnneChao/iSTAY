@@ -34,7 +34,7 @@ a data frame with the following columns: \cr
  Synchrony: synchrony measure of order q
 }
 \description{
-\code{iSTAY_Multiple} computes gamma, alpha, and beta stability, as well as synchrony, for multiple time-series data. Two weighting schemes are implemented: biomass-weighting (analogous to size-weighting in diversity analysis) and equal-weighting.
+\code{iSTAY_Multiple} computes gamma, alpha, and beta stability, together with synchrony, for multiple time-series. Two weighting schemes are implemented: biomass-weighting (analogous to size-weighting in diversity analysis) and equal-weighting.
 }
 \examples{
 # Computing gamma, alpha, and beta stability together with synchrony for 76 individual plots under equal-weighting

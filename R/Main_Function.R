@@ -111,8 +111,8 @@ iSTAY_Single <- function (data, order.q = c(1, 2), Alltime = TRUE, start_T = NUL
 #'
 #' @examples
 #' # Computing gamma, alpha, and beta stability together with synchrony for 76 individual plots under equal-weighting
-#' data("Data_Jena_76_communities")
-#' communities <- Data_Jena_76_communities
+#' data("Data_Jena_76_community_populations")
+#' communities <- Data_Jena_76_community_populations
 #' output_communities_equal <- iSTAY_Multiple(data = communities,
 #'                                           order.q = c(1, 2),
 #'                                           equal_weights = TRUE,
@@ -656,7 +656,7 @@ iSTAY_Hier <- function(data, structure, order.q = c(1, 2), Alltime = TRUE, start
 #'
 #' @examples
 #' data("Data_Jena_20_metacommunities")
-#' data("Data_Jena_76_communities")
+#' data("Data_Jena_76_community_populations")
 #' data("Data_Jena_462_populations")
 #' data("Data_Jena_hierarchical_structure")
 #'
@@ -692,7 +692,7 @@ iSTAY_Hier <- function(data, structure, order.q = c(1, 2), Alltime = TRUE, start
 #' # Results are shown under both the equal-weighting and biomass/size weighting schemes.
 #' # See Example 5 in the iSTAY vignette for the output.
 #'
-#' communities <- Data_Jena_76_communities
+#' communities <- Data_Jena_76_community_populations
 #'
 #' output_two_communities_equal_q <- iSTAY_Multiple(
 #'            data = communities[which(names(communities) %in% c("B1A04_B1_4", "B4A14_B4_2"))],
@@ -976,7 +976,7 @@ ggiSTAY_qprofile <- function(output){
 #' @examples
 #' 
 #' data("Data_Jena_20_metacommunities")
-#' data("Data_Jena_76_communities")
+#' data("Data_Jena_76_community_populations")
 #' data("Data_Jena_462_populations")
 #' data("Data_Jena_hierarchical_structure")
 #'
@@ -1021,7 +1021,7 @@ ggiSTAY_qprofile <- function(output){
 #' 
 #' # Under the equal-weighting scheme
 #' 
-#' communities <- Data_Jena_76_communities
+#' communities <- Data_Jena_76_community_populations
 #' 
 #' output_communities_equal_div <- iSTAY_Multiple(
 #'                                      data = communities,
