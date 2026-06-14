@@ -18,9 +18,7 @@ iSTAY_Multiple(
 
 \item{order.q}{A numerical vector specifying the orders of stability and synchrony. Default is c(1,2).}
 
-\item{equal_weights}{Logical. If \code{TRUE}, all time series are assigned equal weights when computing alpha and gamma stability.
-If \code{FALSE}, time series are weighted by their total abundance or biomass across all time points.
-Default is \code{FALSE}.}
+\item{equal_weights}{Logical. Specifies the weighting scheme used when computing alpha and gamma stability. If \code{TRUE}, all datasets (time series) are assigned equal weights when computing alpha and gamma stability. If \code{FALSE}, datasets are weighted by their total abundance or biomass across all time points. The default is \code{FALSE}.}
 
 \item{Alltime}{Logical (\code{TRUE} or \code{FALSE}), indicating whether to use all time points in the data.}
 
@@ -36,10 +34,10 @@ a data frame with the following columns: \cr
  Synchrony: synchrony measure of order q
 }
 \description{
-\code{iSTAY_Multiple} computes gamma, alpha, and beta stability, as well as synchrony, for multiple time-series data.
+\code{iSTAY_Multiple} computes gamma, alpha, and beta stability, as well as synchrony, for multiple time-series data. Two weighting schemes are implemented: biomass-weighting (analogous to size-weighting in diversity analysis) and equal-weighting.
 }
 \examples{
-# Stability and synchrony of communities using equal weights
+# Computing gamma, alpha, and beta stability together with synchrony for 76 individual plots under equal-weighting
 data("Data_Jena_76_communities")
 communities <- Data_Jena_76_communities
 output_communities_equal <- iSTAY_Multiple(data = communities,
@@ -48,7 +46,7 @@ output_communities_equal <- iSTAY_Multiple(data = communities,
                                           Alltime = TRUE)
 output_communities_equal
 
-# Stability and synchrony of communities using size/biomass weights
+# Computing gamma, alpha, and beta stability together with synchrony for 76 individual plots under biomass/size weighting
 output_communities_biomass <- iSTAY_Multiple(data = communities,
                                             order.q = c(1, 2),
                                             equal_weights = FALSE,
@@ -56,7 +54,7 @@ output_communities_biomass <- iSTAY_Multiple(data = communities,
 output_communities_biomass
 
 
-# Stability and synchrony of metacommunities using equal weights
+# Computing gamma, alpha, and beta stability together with synchrony for 20 individual metacommunities under equal-weighting
 data("Data_Jena_20_metacommunities")
 metacommunities <- Data_Jena_20_metacommunities
 output_metacommunities_equal <- iSTAY_Multiple(data = metacommunities,
@@ -65,7 +63,7 @@ output_metacommunities_equal <- iSTAY_Multiple(data = metacommunities,
                                               Alltime = TRUE)
 output_metacommunities_equal
 
-# Stability and synchrony of metacommunities using size/biomass weights
+# Computing gamma, alpha, and beta stability together with synchrony for 20 individual metacommunities under biomass/size weighting 
 output_metacommunities_biomass <- iSTAY_Multiple(data = metacommunities,
                                                 order.q = c(1, 2),
                                                 equal_weights = FALSE,

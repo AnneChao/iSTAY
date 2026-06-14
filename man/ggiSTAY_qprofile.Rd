@@ -12,9 +12,9 @@ ggiSTAY_qprofile(output)
 \value{
 For an \code{iSTAY_Single} object, this function returns a figure showing the stability profile.\cr
 
-For an \code{iSTAY_Multiple} object, it returns a figure displaying the profiles for gamma, alpha, and beta stability, as well as synchrony.\cr
+For an \code{iSTAY_Multiple} object, it returns a set of plots displaying the profiles for gamma, alpha, and beta stability, as well as synchrony.\cr
 
-For an \code{iSTAY_Hier} object, it returns a figure displaying the profiles for gamma, alpha, and beta stability, as well as synchrony.
+For an \code{iSTAY_Hier} object, it returns a set of plots displaying the profiles for gamma, alpha, and beta stability, as well as synchrony.
 }
 \description{
 \code{ggiSTAY_qprofile} is a graphical function based on the output from the function \code{iSTAY_Single}, \code{iSTAY_Multiple} or \code{iSTAY_Hier}. It generates stability (and synchrony, if multiple time series are included) profiles that depict how stability and synchrony vary with the order q > 0.
@@ -26,7 +26,7 @@ data("Data_Jena_462_populations")
 data("Data_Jena_hierarchical_structure")
 
 ## Single time series analysis
-# Plot the stability profiles of two selected plots
+# Comparing stability profiles of two selected plots
 # See Example 1 in the iSTAY vignette for the output.
 
 individual_plots <- do.call(rbind, Data_Jena_20_metacommunities)
@@ -38,10 +38,10 @@ output_two_plots_q <- iSTAY_Single(
                
 ggiSTAY_qprofile(output = output_two_plots_q)
 
-# Plot the stability profiles of two selected populations
+# Comparing stability profiles of two selected populations
 # See Example 3 in the iSTAY vignette for the output.
 
-individual_populations <- do.call(rbind, Data_Jena_76_communities)
+individual_populations <- Data_Jena_462_populations
 
 output_two_populations_q <- iSTAY_Single(
                data = individual_populations[which(rownames(individual_populations) 
@@ -52,9 +52,9 @@ ggiSTAY_qprofile(output = output_two_populations_q)
 
 
 ## Multiple time series analysis
-# Plot the gamma, alpha and beta stability profiles,
+# Comparing gamma, alpha, and beta stability profiles, and synchrony profiles in two selected communities
 # as well as synchrony profiles of two selected communities.
-# Results are shown using both equal weights and size/biomass weights.
+# Results are shown under both the equal-weighting and biomass/size weighting schemes.
 # See Example 5 in the iSTAY vignette for the output.
 
 communities <- Data_Jena_76_communities
@@ -75,9 +75,8 @@ output_two_communities_biomass_q <- iSTAY_Multiple(
 
 ggiSTAY_qprofile(output = output_two_communities_biomass_q)
 
-# Plot the gamma, alpha and beta stability profiles,
-# as well as synchrony profiles for two selected metacommunities.
-# Results are shown using both equal weights and size/biomass weights.
+# Comparing gamma, alpha, and beta stability profiles, and synchrony profiles for two selected metacommunities
+# Results are shown using both equal weights and biomass/size weights.
 # See Example 7 in the iSTAY vignette for the output.
 
 metacommunities <- Data_Jena_20_metacommunities
@@ -99,6 +98,7 @@ output_two_metacommunities_biomass_q <- iSTAY_Multiple(
 ggiSTAY_qprofile(output = output_two_metacommunities_biomass_q)
 
 ## Hierarchical time series analysis
+# Plotting stability and synchrony profiles at each hierarchical level
 # See Example 9 in the iSTAY vignette for the output.
 output_hier_q <- iSTAY_Hier(data = Data_Jena_462_populations,
                            structure = Data_Jena_hierarchical_structure,

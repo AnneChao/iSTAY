@@ -5,7 +5,7 @@
 Biomass time series data of 462 populations in the Jena experiment
 }
 \description{
-  In the Jena experiment, the biomass of each species sown in a plot was recorded annually from 2003 to 2024, except in 2004. This dataset includes the biomass time series of all 462 populations across 76 plots.
+  In the Jena experiment, the biomass of each species in a plot was recorded annually from 2003 to 2024, except in 2004. This dataset includes the 21-year biomass time series of all 462 populations across 76 plots..
 }
 \usage{data(Data_Jena_462_populations)}
 \format{

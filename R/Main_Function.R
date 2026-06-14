@@ -24,16 +24,16 @@ utils::globalVariables(c(
 #'
 #'
 #' @examples
-#' # Compute the stability of individual plots
+#' # Computing stability of an individual metacommunity
 #' data("Data_Jena_20_metacommunities")
 #' individual_plots <- do.call(rbind, Data_Jena_20_metacommunities)
 #' output_individual_plots <- iSTAY_Single(data = individual_plots, 
 #'                                         order.q=c(1,2), Alltime = TRUE)
 #' output_individual_plots
 #'
-#' # Compute the stability of individual populations
-#' data("Data_Jena_76_communities")
-#' individual_populations <- do.call(rbind, Data_Jena_76_communities)
+#' # Computing stability of an individual population
+#' data("Data_Jena_462_populations")
+#' individual_populations <- Data_Jena_462_populations
 #' output_individual_populations <- iSTAY_Single(data = individual_populations, 
 #'                                               order.q = c(1,2), Alltime = TRUE)
 #' output_individual_populations
@@ -93,13 +93,11 @@ iSTAY_Single <- function (data, order.q = c(1, 2), Alltime = TRUE, start_T = NUL
 
 #' Calculate stability and synchrony for multiple time series.
 #'
-#' \code{iSTAY_Multiple} computes gamma, alpha, and beta stability, as well as synchrony, for multiple time-series data.
+#' \code{iSTAY_Multiple} computes gamma, alpha, and beta stability, as well as synchrony, for multiple time-series data. Two weighting schemes are implemented: biomass-weighting (analogous to size-weighting in diversity analysis) and equal-weighting.
 #'
 #' @param data A \code{data.frame} containing multiple time series data, with sampling units as rows and time points as columns, or a \code{list} of \code{data.frames} with each data frame representing multiple time series.
 #' @param order.q A numerical vector specifying the orders of stability and synchrony. Default is c(1,2).
-#' @param equal_weights Logical. If \code{TRUE}, all time series are assigned equal weights when computing alpha and gamma stability.
-#' If \code{FALSE}, time series are weighted by their total abundance or biomass across all time points.
-#' Default is \code{FALSE}.
+#' @param equal_weights Logical. Specifies the weighting scheme used when computing alpha and gamma stability. If \code{TRUE}, all datasets (time series) are assigned equal weights when computing alpha and gamma stability. If \code{FALSE}, datasets are weighted by their total abundance or biomass across all time points. The default is \code{FALSE}.
 #' @param Alltime Logical (\code{TRUE} or \code{FALSE}), indicating whether to use all time points in the data.
 #' @param start_T (Applicable only if \code{Alltime = FALSE}) a positive integer specifying the starting column (time point) for the analysis interval.
 #' @param end_T (Applicable only if \code{Alltime = FALSE}) a positive integer specifying the ending column (time point) for the analysis interval.
@@ -112,7 +110,7 @@ iSTAY_Single <- function (data, order.q = c(1, 2), Alltime = TRUE, start_T = NUL
 #'  Synchrony: synchrony measure of order q
 #'
 #' @examples
-#' # Stability and synchrony of communities using equal weights
+#' # Computing gamma, alpha, and beta stability together with synchrony for 76 individual plots under equal-weighting
 #' data("Data_Jena_76_communities")
 #' communities <- Data_Jena_76_communities
 #' output_communities_equal <- iSTAY_Multiple(data = communities,
@@ -121,7 +119,7 @@ iSTAY_Single <- function (data, order.q = c(1, 2), Alltime = TRUE, start_T = NUL
 #'                                           Alltime = TRUE)
 #' output_communities_equal
 #'
-#' # Stability and synchrony of communities using size/biomass weights
+#' # Computing gamma, alpha, and beta stability together with synchrony for 76 individual plots under biomass/size weighting
 #' output_communities_biomass <- iSTAY_Multiple(data = communities,
 #'                                             order.q = c(1, 2),
 #'                                             equal_weights = FALSE,
@@ -129,7 +127,7 @@ iSTAY_Single <- function (data, order.q = c(1, 2), Alltime = TRUE, start_T = NUL
 #' output_communities_biomass
 #' 
 #' 
-#' # Stability and synchrony of metacommunities using equal weights
+#' # Computing gamma, alpha, and beta stability together with synchrony for 20 individual metacommunities under equal-weighting
 #' data("Data_Jena_20_metacommunities")
 #' metacommunities <- Data_Jena_20_metacommunities
 #' output_metacommunities_equal <- iSTAY_Multiple(data = metacommunities,
@@ -138,7 +136,7 @@ iSTAY_Single <- function (data, order.q = c(1, 2), Alltime = TRUE, start_T = NUL
 #'                                               Alltime = TRUE)
 #' output_metacommunities_equal
 #'
-#' # Stability and synchrony of metacommunities using size/biomass weights
+#' # Computing gamma, alpha, and beta stability together with synchrony for 20 individual metacommunities under biomass/size weighting 
 #' output_metacommunities_biomass <- iSTAY_Multiple(data = metacommunities,
 #'                                                 order.q = c(1, 2),
 #'                                                 equal_weights = FALSE,
@@ -316,7 +314,7 @@ iSTAY_Multiple = function (data, order.q = c(1, 2), equal_weights = FALSE, Allti
 
 #' Calculate stability and synchrony at each hierarchical level
 #'
-#' \code{iSTAY_Hier} computes gamma, alpha, and beta stability, as well as synchrony, at each hierarchical level for time series of biomass or other variables.
+#' \code{iSTAY_Hier} computes gamma, alpha, and beta stability, as well as synchrony, at each hierarchical level for time series of biomass or other variables. Currently, only the equal-weighting scheme is implemented for hierarchical analyses.
 #'
 #' @param data A \code{data.frame} containing the hierarchical data, with sampling units as rows and time points as columns.
 #' @param structure The hierarchical structure of the input data.
@@ -651,9 +649,9 @@ iSTAY_Hier <- function(data, structure, order.q = c(1, 2), Alltime = TRUE, start
 #'
 #' @return For an \code{iSTAY_Single} object, this function returns a figure showing the stability profile.\cr
 #'
-#' For an \code{iSTAY_Multiple} object, it returns a figure displaying the profiles for gamma, alpha, and beta stability, as well as synchrony.\cr
+#' For an \code{iSTAY_Multiple} object, it returns a set of plots displaying the profiles for gamma, alpha, and beta stability, as well as synchrony.\cr
 #'
-#' For an \code{iSTAY_Hier} object, it returns a figure displaying the profiles for gamma, alpha, and beta stability, as well as synchrony.
+#' For an \code{iSTAY_Hier} object, it returns a set of plots displaying the profiles for gamma, alpha, and beta stability, as well as synchrony.
 #'
 #'
 #' @examples
@@ -663,7 +661,7 @@ iSTAY_Hier <- function(data, structure, order.q = c(1, 2), Alltime = TRUE, start
 #' data("Data_Jena_hierarchical_structure")
 #'
 #' ## Single time series analysis
-#' # Plot the stability profiles of two selected plots
+#' # Comparing stability profiles of two selected plots
 #' # See Example 1 in the iSTAY vignette for the output.
 #' 
 #' individual_plots <- do.call(rbind, Data_Jena_20_metacommunities)
@@ -675,10 +673,10 @@ iSTAY_Hier <- function(data, structure, order.q = c(1, 2), Alltime = TRUE, start
 #'                
 #' ggiSTAY_qprofile(output = output_two_plots_q)
 #'
-#' # Plot the stability profiles of two selected populations
+#' # Comparing stability profiles of two selected populations
 #' # See Example 3 in the iSTAY vignette for the output.
 #' 
-#' individual_populations <- do.call(rbind, Data_Jena_76_communities)
+#' individual_populations <- Data_Jena_462_populations
 #' 
 #' output_two_populations_q <- iSTAY_Single(
 #'                data = individual_populations[which(rownames(individual_populations) 
@@ -689,9 +687,9 @@ iSTAY_Hier <- function(data, structure, order.q = c(1, 2), Alltime = TRUE, start
 #'
 #'
 #' ## Multiple time series analysis
-#' # Plot the gamma, alpha and beta stability profiles,
+#' # Comparing gamma, alpha, and beta stability profiles, and synchrony profiles in two selected communities
 #' # as well as synchrony profiles of two selected communities.
-#' # Results are shown using both equal weights and size/biomass weights.
+#' # Results are shown under both the equal-weighting and biomass/size weighting schemes.
 #' # See Example 5 in the iSTAY vignette for the output.
 #'
 #' communities <- Data_Jena_76_communities
@@ -712,9 +710,8 @@ iSTAY_Hier <- function(data, structure, order.q = c(1, 2), Alltime = TRUE, start
 #'
 #' ggiSTAY_qprofile(output = output_two_communities_biomass_q)
 #'
-#' # Plot the gamma, alpha and beta stability profiles,
-#' # as well as synchrony profiles for two selected metacommunities.
-#' # Results are shown using both equal weights and size/biomass weights.
+#' # Comparing gamma, alpha, and beta stability profiles, and synchrony profiles for two selected metacommunities
+#' # Results are shown using both equal weights and biomass/size weights.
 #' # See Example 7 in the iSTAY vignette for the output.
 #'
 #' metacommunities <- Data_Jena_20_metacommunities
@@ -736,6 +733,7 @@ iSTAY_Hier <- function(data, structure, order.q = c(1, 2), Alltime = TRUE, start
 #' ggiSTAY_qprofile(output = output_two_metacommunities_biomass_q)
 #' 
 #' ## Hierarchical time series analysis
+#' # Plotting stability and synchrony profiles at each hierarchical level
 #' # See Example 9 in the iSTAY vignette for the output.
 #' output_hier_q <- iSTAY_Hier(data = Data_Jena_462_populations,
 #'                            structure = Data_Jena_hierarchical_structure,
@@ -959,10 +957,11 @@ ggiSTAY_qprofile <- function(output){
 #'
 #' \code{ggiSTAY_analysis} is a graphical function based on the output from the functions \code{iSTAY_Single} or \code{iSTAY_Multiple}. It generates plots showing the relationships between stability (and synchrony if multiple time series are included) and an additional variable, such as diversity or another relevant factor.
 #'
-#' @param output The output obtained from \code{iSTAY_Single} or \code{iSTAY_Multiple}. It must include (or be combined with) a column corresponding to the variable specified in \code{x_variable}. If \code{by_group} is not \code{NULL},  must also include a column corresponding to the variable specified in \code{by_group}.
-#' @param x_variable The name of the column representing the diversity (or other) variable to be used as the x-axis in the plot.
-#' @param by_group The name of the column representing a categorical variable used to color points by group. The argument is required if \code{model = "LMM"},  as the model uses it as random effect for both intercept and slope. Default is \code{NULL}.
-#' @param model Specifies the fitting model. Use \code{model = "lm"} for a linear model; or \code{model = "LMM"} for a linear mixed model with random effects for both intercept and slope. Default is \code{model = "LMM"}.
+#' @param output The output returned by \code{iSTAY_Single} or \code{iSTAY_Multiple}. It must include (or be combined with) a column corresponding to the variable specified in \code{x_variable}. If \code{by_group} is not \code{NULL}, it must also include a column corresponding to the variable specified in \code{by_group}.
+#' @param x_variable The name of the column representing the diversity variable (or another variable) to be displayed on the x-axis of the plot.
+#' @param by_group The name of the column representing a categorical grouping variable used to color points by group. The argument is required if \code{model = "LMM"}, as the model uses it as random effect for both intercept and slope. The default is \code{NULL}.
+#' @param model Specifies the fitting model. Use \code{model = "lm"} for a linear model; or \code{model = "LMM"} for a linear mixed model with random effects for both intercept and slope. The default is \code{model = "LMM"}.
+
 #'
 #'
 #' @import stringr
@@ -970,9 +969,9 @@ ggiSTAY_qprofile <- function(output){
 #' @import dplyr
 #'
 #'
-#' @return For an \code{iSTAY_Single} object, this function returns a figure showing the relationship between the diversity (or other) variable and stability. \cr
+#' @return For an \code{iSTAY_Single} object, this function returns a figure showing the relationship between the diversity variable (or another variable) and stability. \cr
 #'
-#' For an \code{iSTAY_Multiple} object, this function returns a figure showing the diversity (or other) variable and gamma, alpha, and beta stability, as well as synchrony.
+#' For an \code{iSTAY_Multiple}  object, this function returns a set of plots showing the relationships between the diversity variable (or another variable) and gamma, alpha, and beta stability, as well as synchrony.
 #'
 #' @examples
 #' 
@@ -982,8 +981,7 @@ ggiSTAY_qprofile <- function(output){
 #' data("Data_Jena_hierarchical_structure")
 #'
 #' ## Single time series analysis
-#' # Analyze the stability of individual plots and diversity-stability 
-#' # relationship based on 76 plots
+#' # Assessing diversity-stability relationships based on 76 individual plots 
 #' # See Example 2 in the iSTAY vignette for the output.
 #' 
 #' individual_plots <- do.call(rbind, Data_Jena_20_metacommunities)
@@ -999,11 +997,10 @@ ggiSTAY_qprofile <- function(output){
 #' ggiSTAY_analysis(output = output_individual_plots_div, x_variable = "log2_sowndiv",
 #'                     by_group="block", model="LMM")
 #'
-#' # Analyze the stability of individual populations and diversity-stability 
-#' # relationships based on 462 populations
+#' # Assessing diversity-stability relationships based on 462 individual populations 
 #' # See Example 4 in the iSTAY vignette for the output.
 #' 
-#' individual_populations <- do.call(rbind, Data_Jena_76_communities)
+#' individual_populations <- Data_Jena_462_populations
 #' 
 #' output_individual_populations_div <- iSTAY_Single(data = individual_populations,
 #'                                          order.q=c(1,2), Alltime=TRUE)
@@ -1019,10 +1016,10 @@ ggiSTAY_qprofile <- function(output){
 #'
 #'
 #' ## Multiple time series analysis
-#' # Analyze the stability and synchrony within each community
+#' # Assessing diversity-stability and diversity-synchrony relationships across 76 communities
 #' # See Example 6 in the iSTAY vignette for the output.
 #' 
-#' # using equal weights
+#' # Under the equal-weighting scheme
 #' 
 #' communities <- Data_Jena_76_communities
 #' 
@@ -1044,7 +1041,7 @@ ggiSTAY_qprofile <- function(output){
 #'                  by_group = "block",
 #'                  model = "LMM")
 #'
-#' # using size/biomass weights
+#' # Under the biomass/size weighting scheme
 #' 
 #' output_communities_biomass_div <- iSTAY_Multiple(
 #'                                        data = communities,
@@ -1065,10 +1062,10 @@ ggiSTAY_qprofile <- function(output){
 #'                  model = "LMM")
 #'
 #'
-#' # Analyze the stability and synchrony within each metacommunity
+#' # Assessing diversity-stability and diversity-synchrony relationships across 20 metacommunities 
 #' # See Example 8 in the iSTAY vignette for the output.
 #' 
-#' # using equal weights
+#' # Under the equal-weighting scheme 
 #' 
 #' metacommunities <- Data_Jena_20_metacommunities
 #' 
@@ -1090,7 +1087,7 @@ ggiSTAY_qprofile <- function(output){
 #'                  by_group = "block",
 #'                  model = "LMM")
 #'
-#' # using size/biomass weights
+#' # Under the biomass/size weighting scheme
 #' 
 #' output_metacommunities_biomass_div <- iSTAY_Multiple(
 #'                                        data = metacommunities,

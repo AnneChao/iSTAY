@@ -177,32 +177,6 @@ data("Data_Jena_76_communities")
 communities <- Data_Jena_76_communities
 head(round(communities[[1]][,1:5],2), 10)
 ```
-#### Converting community data to population data
-The dataset `Data_Jena_76_communities` can be converted into data for the 462 individual populations, stored as `individual_populations`, using the following code. The table below displays the first 10 populations and the first five columns of the resulting dataset. 
-
-```{r, eval=F}
-data("Data_Jena_76_communities")
-individual_populations <- do.call(rbind, Data_Jena_76_communities)
-head(round(individual_populations[,1:5],2), 10)
-```
-
-```{r, echo=F}
-data("Data_Jena_76_communities")
-individual_populations <- do.call(rbind, Data_Jena_76_communities)
-head(round(individual_populations[,1:5],2), 10)
-```
-
-The converted 462-population dataset (`individual_populations`) are identical to `Data_Jena_462_populations`. For example, the following code displays the first ten rows and the first five columns of `Data_Jena_462_populations`: 
-
-```{r, eval=F}
-data("Data_Jena_462_populations")
-head(round(Data_Jena_462_populations[,1:5],2), 10)
-```
-
-```{r, echo=F}
-data("Data_Jena_462_populations")
-head(round(Data_Jena_462_populations[,1:5],2), 10)
-```
 
 
 #### Hierarchical structure data
@@ -291,15 +265,15 @@ Run the following code to compute stability values for orders q = 0.1 to q = 2.0
 
 
 ```{r, eval=F}
-individual_populations <- do.call(rbind, Data_Jena_76_communities)
-output_two_populations_q <- iSTAY_Single(data = individual_populations[which(rownames(individual_populations) %in% c("B1A06_B1_16.BM_Ant.odo", "B1A06_B1_16.BM_Cam.pat")),],
+individual_populations <- Data_Jena_462_populations
+output_two_populations_q <- iSTAY_Single(data = individual_populations[which(rownames(individual_populations) %in% c("B1A06_B1_16_BM_Ant.odo", "B1A06_B1_16_BM_Cam.pat")),],
                                        order.q=seq(0.1,2,0.1), Alltime=TRUE)
 head(output_two_populations_q, 10)
 ```
 
 ```{r, echo=F}
-individual_populations <- do.call(rbind, Data_Jena_76_communities)
-output_two_populations_q <- iSTAY_Single(data = individual_populations[which(rownames(individual_populations) %in% c("B1A06_B1_16.BM_Ant.odo", "B1A06_B1_16.BM_Cam.pat")),],
+individual_populations <- Data_Jena_462_populations
+output_two_populations_q <- iSTAY_Single(data = individual_populations[which(rownames(individual_populations) %in% c("B1A06_B1_16_BM_Ant.odo", "B1A06_B1_16_BM_Cam.pat")),],
                                        order.q=seq(0.1,2,0.1), Alltime=TRUE)
 
 head(cbind(output_two_populations_q[,1:2],"Stability"=round(output_two_populations_q[,3],3)), 10)

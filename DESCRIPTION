@@ -2,7 +2,7 @@ Package: iSTAY
 Type: Package
 Title: Information-Based Stability and Synchrony Measures
 Version: 1.1.0
-Date: 2026-05-29
+Date: 2026-06-14
 Author: Anne Chao [aut, cre], Yu-Ti Lee [aut], Keng-Lei Lin [aut], Po-Yen Chuang [aut]
 Maintainer: Anne Chao <chao@stat.nthu.edu.tw>
 Authors@R:
@@ -27,8 +27,8 @@ Description: Provides functions to compute a continuum of information-based meas
  for quantifying the temporal stability of populations, communities, and ecosystems, 
  as well as their associated synchrony, based on species (or species assemblage)
  biomass or other key variables. When biodiversity data are available, the package
- also enables the assessment of the corresponding diversity–stability relationships.
- All measures are applicable in both temporal and spatial contexts. The theoretical
+ also enables the assessment of the corresponding diversity–stability and diversity–synchrony 
+ relationships. All measures are applicable in both temporal and spatial contexts. The theoretical
  and methodological background is detailed in Chao et al. (2025) 
  <doi:10.1101/2025.08.20.671203>.
 License: GPL (>= 3)

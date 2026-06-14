@@ -34,7 +34,7 @@ a data frame with the following columns: \cr
  Synchrony: synchrony measure of order q
 }
 \description{
-\code{iSTAY_Hier} computes gamma, alpha, and beta stability, as well as synchrony, at each hierarchical level for time series of biomass or other variables.
+\code{iSTAY_Hier} computes gamma, alpha, and beta stability, as well as synchrony, at each hierarchical level for time series of biomass or other variables. Currently, only the equal-weighting scheme is implemented for hierarchical analyses.
 }
 \examples{
 

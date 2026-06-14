@@ -33,16 +33,16 @@ Stability: stability measures of order q
 \code{iSTAY_Single} computes the stability of order q for a single time series.
 }
 \examples{
-# Compute the stability of individual plots
+# Computing stability of an individual metacommunity
 data("Data_Jena_20_metacommunities")
 individual_plots <- do.call(rbind, Data_Jena_20_metacommunities)
 output_individual_plots <- iSTAY_Single(data = individual_plots, 
                                         order.q=c(1,2), Alltime = TRUE)
 output_individual_plots
 
-# Compute the stability of individual populations
-data("Data_Jena_76_communities")
-individual_populations <- do.call(rbind, Data_Jena_76_communities)
+# Computing stability of an individual population
+data("Data_Jena_462_populations")
+individual_populations <- Data_Jena_462_populations
 output_individual_populations <- iSTAY_Single(data = individual_populations, 
                                               order.q = c(1,2), Alltime = TRUE)
 output_individual_populations

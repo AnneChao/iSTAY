@@ -7,18 +7,18 @@
 ggiSTAY_analysis(output, x_variable, by_group = NULL, model = "LMM")
 }
 \arguments{
-\item{output}{The output obtained from \code{iSTAY_Single} or \code{iSTAY_Multiple}. It must include (or be combined with) a column corresponding to the variable specified in \code{x_variable}. If \code{by_group} is not \code{NULL},  must also include a column corresponding to the variable specified in \code{by_group}.}
+\item{output}{The output returned by \code{iSTAY_Single} or \code{iSTAY_Multiple}. It must include (or be combined with) a column corresponding to the variable specified in \code{x_variable}. If \code{by_group} is not \code{NULL}, it must also include a column corresponding to the variable specified in \code{by_group}.}
 
-\item{x_variable}{The name of the column representing the diversity (or other) variable to be used as the x-axis in the plot.}
+\item{x_variable}{The name of the column representing the diversity variable (or another variable) to be displayed on the x-axis of the plot.}
 
-\item{by_group}{The name of the column representing a categorical variable used to color points by group. The argument is required if \code{model = "LMM"},  as the model uses it as random effect for both intercept and slope. Default is \code{NULL}.}
+\item{by_group}{The name of the column representing a categorical grouping variable used to color points by group. The argument is required if \code{model = "LMM"}, as the model uses it as random effect for both intercept and slope. The default is \code{NULL}.}
 
-\item{model}{Specifies the fitting model. Use \code{model = "lm"} for a linear model; or \code{model = "LMM"} for a linear mixed model with random effects for both intercept and slope. Default is \code{model = "LMM"}.}
+\item{model}{Specifies the fitting model. Use \code{model = "lm"} for a linear model; or \code{model = "LMM"} for a linear mixed model with random effects for both intercept and slope. The default is \code{model = "LMM"}.}
 }
 \value{
-For an \code{iSTAY_Single} object, this function returns a figure showing the relationship between the diversity (or other) variable and stability. \cr
+For an \code{iSTAY_Single} object, this function returns a figure showing the relationship between the diversity variable (or another variable) and stability. \cr
 
-For an \code{iSTAY_Multiple} object, this function returns a figure showing the diversity (or other) variable and gamma, alpha, and beta stability, as well as synchrony.
+For an \code{iSTAY_Multiple}  object, this function returns a set of plots showing the relationships between the diversity variable (or another variable) and gamma, alpha, and beta stability, as well as synchrony.
 }
 \description{
 \code{ggiSTAY_analysis} is a graphical function based on the output from the functions \code{iSTAY_Single} or \code{iSTAY_Multiple}. It generates plots showing the relationships between stability (and synchrony if multiple time series are included) and an additional variable, such as diversity or another relevant factor.
@@ -31,8 +31,7 @@ data("Data_Jena_462_populations")
 data("Data_Jena_hierarchical_structure")
 
 ## Single time series analysis
-# Analyze the stability of individual plots and diversity-stability 
-# relationship based on 76 plots
+# Assessing diversity-stability relationships based on 76 individual plots 
 # See Example 2 in the iSTAY vignette for the output.
 
 individual_plots <- do.call(rbind, Data_Jena_20_metacommunities)
@@ -48,11 +47,10 @@ output_individual_plots_div <- data.frame(output_individual_plots_div,
 ggiSTAY_analysis(output = output_individual_plots_div, x_variable = "log2_sowndiv",
                     by_group="block", model="LMM")
 
-# Analyze the stability of individual populations and diversity-stability 
-# relationships based on 462 populations
+# Assessing diversity-stability relationships based on 462 individual populations 
 # See Example 4 in the iSTAY vignette for the output.
 
-individual_populations <- do.call(rbind, Data_Jena_76_communities)
+individual_populations <- Data_Jena_462_populations
 
 output_individual_populations_div <- iSTAY_Single(data = individual_populations,
                                          order.q=c(1,2), Alltime=TRUE)
@@ -68,10 +66,10 @@ ggiSTAY_analysis(output = output_individual_populations_div, x_variable = "log2_
 
 
 ## Multiple time series analysis
-# Analyze the stability and synchrony within each community
+# Assessing diversity-stability and diversity-synchrony relationships across 76 communities
 # See Example 6 in the iSTAY vignette for the output.
 
-# using equal weights
+# Under the equal-weighting scheme
 
 communities <- Data_Jena_76_communities
 
@@ -93,7 +91,7 @@ ggiSTAY_analysis(output = output_communities_equal_div,
                  by_group = "block",
                  model = "LMM")
 
-# using size/biomass weights
+# Under the biomass/size weighting scheme
 
 output_communities_biomass_div <- iSTAY_Multiple(
                                        data = communities,
@@ -114,10 +112,10 @@ ggiSTAY_analysis(output = output_communities_biomass_div,
                  model = "LMM")
 
 
-# Analyze the stability and synchrony within each metacommunity
+# Assessing diversity-stability and diversity-synchrony relationships across 20 metacommunities 
 # See Example 8 in the iSTAY vignette for the output.
 
-# using equal weights
+# Under the equal-weighting scheme 
 
 metacommunities <- Data_Jena_20_metacommunities
 
@@ -139,7 +137,7 @@ ggiSTAY_analysis(output = output_metacommunities_equal_div,
                  by_group = "block",
                  model = "LMM")
 
-# using size/biomass weights
+# Under the biomass/size weighting scheme
 
 output_metacommunities_biomass_div <- iSTAY_Multiple(
                                        data = metacommunities,
